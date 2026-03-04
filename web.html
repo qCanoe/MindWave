@@ -405,6 +405,165 @@
             transform: scaleY(0.07);
             opacity: 0.22;
         }
+
+        /* ── Profile Modal ────────────────────────────────────────────────── */
+        @keyframes modal-in {
+            from { opacity: 0; transform: scale(0.96) translateY(18px); filter: blur(8px); }
+            to   { opacity: 1; transform: scale(1)    translateY(0);    filter: blur(0);   }
+        }
+        @keyframes step-slide-in {
+            from { opacity: 0; transform: translateX(14px); }
+            to   { opacity: 1; transform: translateX(0);    }
+        }
+        @keyframes step-slide-back {
+            from { opacity: 0; transform: translateX(-14px); }
+            to   { opacity: 1; transform: translateX(0);     }
+        }
+
+        #profile-modal { transition: opacity 0.4s ease; }
+
+        #profile-card {
+            animation: modal-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .step-panel { display: none; }
+        .step-panel.active {
+            display: block;
+            animation: step-slide-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        .step-panel.active.going-back {
+            animation: step-slide-back 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        /* Profile chip */
+        .p-chip {
+            padding: 0.45rem 1.1rem;
+            border-radius: 9999px;
+            font-size: 0.68rem;
+            font-weight: 300;
+            letter-spacing: 0.08em;
+            border: 1px solid rgba(255,255,255,0.07);
+            background: transparent;
+            color: rgba(255,255,255,0.38);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            user-select: none;
+            white-space: nowrap;
+            line-height: 1;
+            font-family: 'Outfit', sans-serif;
+        }
+        .p-chip:hover {
+            border-color: rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.75);
+        }
+        .p-chip.p-active {
+            background: rgba(255,255,255,0.10);
+            border-color: rgba(255,255,255,0.28);
+            color: #fff;
+            box-shadow: 0 0 14px rgba(255,255,255,0.05);
+        }
+
+        /* Profile text field */
+        .p-field {
+            background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 1rem;
+            padding: 0.85rem 1.2rem;
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.07);
+            transition: all 0.3s ease;
+        }
+        .p-field:focus-within {
+            background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+            border-color: rgba(255,255,255,0.18);
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.12), 0 0 20px rgba(180,198,218,0.08);
+        }
+        .p-field input,
+        .p-field textarea {
+            width: 100%;
+            background: transparent;
+            color: rgba(255,255,255,0.88);
+            font-size: 0.84rem;
+            letter-spacing: 0.02em;
+            outline: none;
+            caret-color: white;
+            font-family: 'Outfit', sans-serif;
+        }
+        .p-field input::placeholder,
+        .p-field textarea::placeholder { color: rgba(255,255,255,0.22); }
+        .p-field textarea { resize: none; line-height: 1.65; }
+
+        /* Profile label */
+        .p-label {
+            display: block;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            font-weight: 500;
+            color: rgba(255,255,255,0.28);
+            margin-bottom: 0.7rem;
+        }
+        .p-label-note {
+            text-transform: none;
+            letter-spacing: normal;
+            font-weight: 300;
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.18);
+        }
+
+        /* Slider */
+        .p-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+            width: 100%;
+            height: 22px;
+        }
+        .p-slider::-webkit-slider-runnable-track {
+            background: rgba(255,255,255,0.08);
+            height: 2px;
+            border-radius: 1px;
+        }
+        .p-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.85);
+            margin-top: -7px;
+            box-shadow: 0 0 10px rgba(255,255,255,0.22), 0 2px 6px rgba(0,0,0,0.4);
+            cursor: pointer;
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+        .p-slider::-webkit-slider-thumb:hover {
+            box-shadow: 0 0 18px rgba(255,255,255,0.38), 0 2px 8px rgba(0,0,0,0.4);
+            transform: scale(1.12);
+        }
+        .p-slider::-moz-range-track {
+            background: rgba(255,255,255,0.08);
+            height: 2px; border-radius: 1px; border: none;
+        }
+        .p-slider::-moz-range-thumb {
+            width: 16px; height: 16px; border-radius: 50%;
+            background: rgba(255,255,255,0.85);
+            border: none; box-shadow: 0 0 10px rgba(255,255,255,0.22);
+            cursor: pointer;
+        }
+
+        /* Profile modal scrollbar */
+        #profile-scroll::-webkit-scrollbar { width: 0; }
+
+        /* Step dot transition */
+        .sdot { transition: width 0.4s ease, background 0.4s ease; }
+
+        /* Toast */
+        @keyframes toast-in {
+            from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+            to   { opacity: 1; transform: translateX(-50%) translateY(0);   }
+        }
+        @keyframes toast-out {
+            from { opacity: 1; }
+            to   { opacity: 0; }
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-white/20 selection:text-white overflow-hidden flex flex-col h-screen">
@@ -428,10 +587,17 @@
                 </div>
                 <span class="text-xl font-medium tracking-wide text-white/90 font-display italic">MoodTune</span>
             </a>
-            <button class="text-xs font-light px-5 py-2.5 rounded-full border transition-all duration-300 bg-transparent border-white/10 text-white/50 hover:border-white/30 hover:text-white flex items-center gap-2">
-                <iconify-icon icon="lucide:rotate-ccw" width="12"></iconify-icon>
-                Reset Aura
-            </button>
+            <div class="flex items-center gap-3">
+                <button id="profile-btn" class="text-xs font-light px-5 py-2.5 rounded-full border transition-all duration-300 bg-transparent border-white/10 text-white/50 hover:border-white/30 hover:text-white flex items-center gap-2 group">
+                    <iconify-icon icon="lucide:user-round" width="13"></iconify-icon>
+                    <span id="profile-btn-label">My Profile</span>
+                    <span id="profile-saved-dot" class="hidden w-1.5 h-1.5 rounded-full bg-white/50 group-hover:bg-white transition-all"></span>
+                </button>
+                <button class="text-xs font-light px-5 py-2.5 rounded-full border transition-all duration-300 bg-transparent border-white/10 text-white/50 hover:border-white/30 hover:text-white flex items-center gap-2">
+                    <iconify-icon icon="lucide:rotate-ccw" width="12"></iconify-icon>
+                    Reset Aura
+                </button>
+            </div>
         </div>
     </header>
 
@@ -610,6 +776,304 @@
             </div>
         </div>
     </div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PROFILE MODAL
+════════════════════════════════════════════════════════════════ -->
+<div id="profile-modal" class="fixed inset-0 z-[100] flex items-center justify-center" style="opacity:0;pointer-events:none;">
+
+    <!-- Backdrop -->
+    <div id="profile-backdrop" class="absolute inset-0 bg-black/65 backdrop-blur-sm cursor-pointer"></div>
+
+    <!-- Card -->
+    <div id="profile-card" class="relative glass-panel rounded-[2.5rem] w-full max-w-xl mx-5 flex flex-col shadow-[0_40px_80px_rgba(0,0,0,0.65)]" style="max-height:88vh;border:1px solid rgba(255,255,255,0.1);">
+
+        <!-- ── Card Header ─────────────────────────────────────────── -->
+        <div class="px-9 pt-9 pb-5 flex-shrink-0">
+            <div class="flex items-start justify-between mb-5">
+                <div>
+                    <span class="p-label" style="margin-bottom:.45rem">Therapy Profile</span>
+                    <h2 id="p-step-title" class="font-display text-[1.85rem] text-white/90 italic tracking-wide leading-tight">Basic Information</h2>
+                </div>
+                <button id="profile-close" class="mt-1 w-9 h-9 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/45 hover:text-white hover:bg-white/10 transition-all duration-300 flex-shrink-0">
+                    <iconify-icon icon="lucide:x" width="15"></iconify-icon>
+                </button>
+            </div>
+
+            <!-- Step indicator dots -->
+            <div class="flex items-center gap-2">
+                <div class="sdot h-1.5 rounded-full bg-white/65" style="width:24px" data-sdot="0"></div>
+                <div class="sdot h-1.5 rounded-full bg-white/13" style="width:8px"  data-sdot="1"></div>
+                <div class="sdot h-1.5 rounded-full bg-white/13" style="width:8px"  data-sdot="2"></div>
+                <div class="sdot h-1.5 rounded-full bg-white/13" style="width:8px"  data-sdot="3"></div>
+                <div class="sdot h-1.5 rounded-full bg-white/13" style="width:8px"  data-sdot="4"></div>
+                <span id="p-step-counter" class="ml-3 text-[10px] font-mono text-white/22 tracking-widest">01 / 05</span>
+            </div>
+        </div>
+
+        <!-- ── Scrollable Content ──────────────────────────────────── -->
+        <div id="profile-scroll" class="flex-1 overflow-y-auto px-9 pb-2" style="-webkit-overflow-scrolling:touch;">
+
+            <!-- STEP 1 · Basic Information ─────────────────────────── -->
+            <div class="step-panel active" data-panel="0">
+
+                <div class="profile-section mb-7">
+                    <label class="p-label" for="p-name">Full Name</label>
+                    <div class="p-field">
+                        <input id="p-name" type="text" placeholder="Your name…" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="flex gap-4 mb-7">
+                    <div class="flex-1">
+                        <label class="p-label" for="p-age">Age</label>
+                        <div class="p-field">
+                            <input id="p-age" type="number" min="1" max="120" placeholder="e.g. 28" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <label class="p-label">Gender</label>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <button class="p-chip" data-group="gender" data-val="male">Male</button>
+                            <button class="p-chip" data-group="gender" data-val="female">Female</button>
+                            <button class="p-chip" data-group="gender" data-val="nb">Non-binary</button>
+                            <button class="p-chip" data-group="gender" data-val="other">Other</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-7">
+                    <label class="p-label" for="p-contact">Contact <span class="p-label-note">(for therapist communication)</span></label>
+                    <div class="p-field">
+                        <input id="p-contact" type="text" placeholder="Email or phone…" autocomplete="off">
+                    </div>
+                </div>
+
+            </div><!-- /step 1 -->
+
+            <!-- STEP 2 · Physical Health ───────────────────────────── -->
+            <div class="step-panel" data-panel="1">
+
+                <div class="mb-7">
+                    <label class="p-label">Hearing Status</label>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="p-chip" data-group="hearing" data-val="normal">Normal</button>
+                        <button class="p-chip" data-group="hearing" data-val="mild">Mild Impairment</button>
+                        <button class="p-chip" data-group="hearing" data-val="moderate">Moderate Impairment</button>
+                        <button class="p-chip" data-group="hearing" data-val="severe">Severe Impairment</button>
+                    </div>
+                </div>
+
+                <div class="mb-7">
+                    <label class="p-label">Chronic Conditions <span class="p-label-note">(all that apply)</span></label>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="p-chip" data-group="conditions" data-multi="1" data-val="none">None</button>
+                        <button class="p-chip" data-group="conditions" data-multi="1" data-val="hypertension">Hypertension</button>
+                        <button class="p-chip" data-group="conditions" data-multi="1" data-val="diabetes">Diabetes</button>
+                        <button class="p-chip" data-group="conditions" data-multi="1" data-val="heart">Heart Disease</button>
+                        <button class="p-chip" data-group="conditions" data-multi="1" data-val="anxiety-d">Anxiety Disorder</button>
+                        <button class="p-chip" data-group="conditions" data-multi="1" data-val="other">Other</button>
+                    </div>
+                </div>
+
+                <div class="mb-7">
+                    <label class="p-label">Current Medication</label>
+                    <div class="flex gap-2">
+                        <button class="p-chip" data-group="medication" data-val="yes">Yes</button>
+                        <button class="p-chip" data-group="medication" data-val="no">No</button>
+                    </div>
+                </div>
+
+                <div class="mb-7">
+                    <div class="flex items-center justify-between mb-3">
+                        <label class="p-label" style="margin-bottom:0">Sleep Quality</label>
+                        <span id="p-sleep-disp" class="text-[10px] font-mono text-white/40 tracking-widest">6 / 10</span>
+                    </div>
+                    <input id="p-sleep" class="p-slider" type="range" min="1" max="10" value="6" step="1">
+                    <div class="flex justify-between mt-1.5">
+                        <span class="text-[10px] text-white/20">Poor</span>
+                        <span class="text-[10px] text-white/20">Excellent</span>
+                    </div>
+                </div>
+
+                <div class="mb-7">
+                    <label class="p-label" for="p-meds-note">Medication or Health Notes <span class="p-label-note">(optional)</span></label>
+                    <div class="p-field">
+                        <textarea id="p-meds-note" rows="2" placeholder="e.g. taking SSRIs, managing chronic back pain…"></textarea>
+                    </div>
+                </div>
+
+            </div><!-- /step 2 -->
+
+            <!-- STEP 3 · Emotional Landscape ──────────────────────── -->
+            <div class="step-panel" data-panel="2">
+
+                <div class="mb-7">
+                    <label class="p-label">Current Emotional State <span class="p-label-note">(up to 3)</span></label>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="p-chip" data-group="emotions" data-multi="3" data-val="anxious">Anxious</button>
+                        <button class="p-chip" data-group="emotions" data-multi="3" data-val="depressed">Depressed</button>
+                        <button class="p-chip" data-group="emotions" data-multi="3" data-val="stressed">Stressed</button>
+                        <button class="p-chip" data-group="emotions" data-multi="3" data-val="calm">Calm</button>
+                        <button class="p-chip" data-group="emotions" data-multi="3" data-val="sad">Sad</button>
+                        <button class="p-chip" data-group="emotions" data-multi="3" data-val="angry">Angry</button>
+                        <button class="p-chip" data-group="emotions" data-multi="3" data-val="fatigued">Fatigued</button>
+                        <button class="p-chip" data-group="emotions" data-multi="3" data-val="peaceful">At Peace</button>
+                        <button class="p-chip" data-group="emotions" data-multi="3" data-val="numb">Emotionally Numb</button>
+                    </div>
+                </div>
+
+                <div class="mb-7">
+                    <label class="p-label">Treatment Goals <span class="p-label-note">(all that apply)</span></label>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="p-chip" data-group="goals" data-multi="1" data-val="relax">Relaxation</button>
+                        <button class="p-chip" data-group="goals" data-multi="1" data-val="focus">Focus &amp; Clarity</button>
+                        <button class="p-chip" data-group="goals" data-multi="1" data-val="emotion-reg">Emotional Regulation</button>
+                        <button class="p-chip" data-group="goals" data-multi="1" data-val="trauma">Trauma Healing</button>
+                        <button class="p-chip" data-group="goals" data-multi="1" data-val="energy">Energy Boost</button>
+                        <button class="p-chip" data-group="goals" data-multi="1" data-val="sleep">Sleep Improvement</button>
+                        <button class="p-chip" data-group="goals" data-multi="1" data-val="confidence">Self-Confidence</button>
+                    </div>
+                </div>
+
+                <div class="mb-7">
+                    <label class="p-label">Emotional Fluctuation Pattern <span class="p-label-note">(when it's most intense)</span></label>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="p-chip" data-group="fluctuation" data-multi="1" data-val="morning">Morning Peak</button>
+                        <button class="p-chip" data-group="fluctuation" data-multi="1" data-val="afternoon">Afternoon Peak</button>
+                        <button class="p-chip" data-group="fluctuation" data-multi="1" data-val="night">Nighttime Peak</button>
+                        <button class="p-chip" data-group="fluctuation" data-multi="1" data-val="random">Unpredictable</button>
+                        <button class="p-chip" data-group="fluctuation" data-multi="1" data-val="stable">Generally Stable</button>
+                    </div>
+                </div>
+
+            </div><!-- /step 3 -->
+
+            <!-- STEP 4 · Music Preferences ─────────────────────────── -->
+            <div class="step-panel" data-panel="3">
+
+                <div class="mb-7">
+                    <label class="p-label">Preferred Music Styles <span class="p-label-note">(all that apply)</span></label>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="p-chip" data-group="styles" data-multi="1" data-val="classical">Classical</button>
+                        <button class="p-chip" data-group="styles" data-multi="1" data-val="nature">Nature Sounds</button>
+                        <button class="p-chip" data-group="styles" data-multi="1" data-val="electronic">Electronic</button>
+                        <button class="p-chip" data-group="styles" data-multi="1" data-val="jazz">Jazz</button>
+                        <button class="p-chip" data-group="styles" data-multi="1" data-val="meditation">Meditation</button>
+                        <button class="p-chip" data-group="styles" data-multi="1" data-val="ambient">Ambient</button>
+                        <button class="p-chip" data-group="styles" data-multi="1" data-val="folk">Folk</button>
+                        <button class="p-chip" data-group="styles" data-multi="1" data-val="instrumental">Pure Instrumental</button>
+                        <button class="p-chip" data-group="styles" data-multi="1" data-val="binaural">Binaural Beats</button>
+                    </div>
+                </div>
+
+                <div class="mb-7">
+                    <label class="p-label" for="p-sensitive">Sounds to Avoid <span class="p-label-note">(triggers or discomfort)</span></label>
+                    <div class="p-field">
+                        <textarea id="p-sensitive" rows="3" placeholder="e.g. high-pitched tones, heavy percussion, lyrics in certain languages…"></textarea>
+                    </div>
+                </div>
+
+                <div class="mb-7">
+                    <div class="flex items-center justify-between mb-3">
+                        <label class="p-label" style="margin-bottom:0">Rhythm Preference</label>
+                        <span id="p-rhythm-disp" class="text-[10px] font-mono text-white/40 tracking-widest">Balanced</span>
+                    </div>
+                    <input id="p-rhythm" class="p-slider" type="range" min="1" max="5" value="3" step="1">
+                    <div class="flex justify-between mt-1.5">
+                        <span class="text-[10px] text-white/20">Slow &amp; Soothing</span>
+                        <span class="text-[10px] text-white/20">Fast &amp; Activating</span>
+                    </div>
+                </div>
+
+                <div class="mb-7">
+                    <label class="p-label">Volume Sensitivity</label>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="p-chip" data-group="volume" data-val="soft">Prefer Soft</button>
+                        <button class="p-chip" data-group="volume" data-val="moderate">Moderate</button>
+                        <button class="p-chip" data-group="volume" data-val="immersive">Immersive &amp; Full</button>
+                    </div>
+                </div>
+
+            </div><!-- /step 4 -->
+
+            <!-- STEP 5 · Treatment History ─────────────────────────── -->
+            <div class="step-panel" data-panel="4">
+
+                <div class="mb-7">
+                    <label class="p-label">Previous Therapy Experience</label>
+                    <div class="flex gap-2">
+                        <button class="p-chip" data-group="prevTherapy" data-val="yes">Yes</button>
+                        <button class="p-chip" data-group="prevTherapy" data-val="no">No</button>
+                        <button class="p-chip" data-group="prevTherapy" data-val="unsure">Unsure</button>
+                    </div>
+                </div>
+
+                <div class="mb-7">
+                    <label class="p-label">Types of Therapy Tried <span class="p-label-note">(all that apply)</span></label>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="p-chip" data-group="therapyTypes" data-multi="1" data-val="music-therapy">Music Therapy</button>
+                        <button class="p-chip" data-group="therapyTypes" data-multi="1" data-val="counseling">Counseling</button>
+                        <button class="p-chip" data-group="therapyTypes" data-multi="1" data-val="meditation">Meditation</button>
+                        <button class="p-chip" data-group="therapyTypes" data-multi="1" data-val="cbt">CBT</button>
+                        <button class="p-chip" data-group="therapyTypes" data-multi="1" data-val="somatic">Somatic Therapy</button>
+                        <button class="p-chip" data-group="therapyTypes" data-multi="1" data-val="other">Other</button>
+                    </div>
+                </div>
+
+                <div class="mb-7">
+                    <label class="p-label">Sessions Completed (approximate)</label>
+                    <div class="flex gap-2 flex-wrap">
+                        <button class="p-chip" data-group="sessions" data-val="0">None yet</button>
+                        <button class="p-chip" data-group="sessions" data-val="1-5">1 – 5</button>
+                        <button class="p-chip" data-group="sessions" data-val="6-20">6 – 20</button>
+                        <button class="p-chip" data-group="sessions" data-val="21+">21 +</button>
+                    </div>
+                </div>
+
+                <div class="mb-7">
+                    <label class="p-label">Overall Effectiveness of Past Therapy</label>
+                    <div class="flex gap-2 flex-wrap">
+                        <button class="p-chip" data-group="effectiveness" data-val="excellent">Excellent</button>
+                        <button class="p-chip" data-group="effectiveness" data-val="good">Good</button>
+                        <button class="p-chip" data-group="effectiveness" data-val="fair">Fair</button>
+                        <button class="p-chip" data-group="effectiveness" data-val="poor">Poor</button>
+                        <button class="p-chip" data-group="effectiveness" data-val="na">N / A</button>
+                    </div>
+                </div>
+
+                <div class="mb-7">
+                    <label class="p-label" for="p-notes">Feedback & Additional Notes <span class="p-label-note">(for your therapist)</span></label>
+                    <div class="p-field">
+                        <textarea id="p-notes" rows="4" placeholder="Describe past experiences, what worked, what didn't, or anything your therapist should know…"></textarea>
+                    </div>
+                </div>
+
+            </div><!-- /step 5 -->
+
+        </div><!-- /scroll -->
+
+        <!-- ── Footer Navigation ──────────────────────────────────── -->
+        <div class="px-9 py-7 flex-shrink-0 border-t border-white/5 flex items-center justify-between">
+
+            <button id="p-prev" class="text-xs font-light px-6 py-3 rounded-full border border-white/10 text-white/38 hover:text-white hover:border-white/28 transition-all duration-300 flex items-center gap-2" style="opacity:0;pointer-events:none;">
+                <iconify-icon icon="lucide:arrow-left" width="13"></iconify-icon>
+                Back
+            </button>
+
+            <!-- Completion dots (right side) -->
+            <div class="flex items-center gap-5">
+                <button id="p-next" class="text-xs font-light px-8 py-3 rounded-full bg-white/10 border border-white/20 text-white hover:bg-white/18 transition-all duration-300 flex items-center gap-2">
+                    Continue
+                    <iconify-icon icon="lucide:arrow-right" width="13"></iconify-icon>
+                </button>
+            </div>
+
+        </div>
+
+    </div><!-- /card -->
+</div><!-- /modal -->
+
 
 <script>
 (function () {
@@ -1046,6 +1510,291 @@
     updateEqSpeed(currentMode);   // sync EQ tempo with initial mode
     startTicker();
     document.title = '▶ Playing… · MoodTune';
+})();
+</script>
+
+<!-- ── Profile Modal JS ──────────────────────────────────────────── -->
+<script>
+(function () {
+    'use strict';
+
+    // ── DOM ──────────────────────────────────────────────────────────
+    const modal        = document.getElementById('profile-modal');
+    const backdrop     = document.getElementById('profile-backdrop');
+    const card         = document.getElementById('profile-card');
+    const openBtn      = document.getElementById('profile-btn');
+    const closeBtn     = document.getElementById('profile-close');
+    const prevBtn      = document.getElementById('p-prev');
+    const nextBtn      = document.getElementById('p-next');
+    const stepTitle    = document.getElementById('p-step-title');
+    const stepCounter  = document.getElementById('p-step-counter');
+    const stepDots     = document.querySelectorAll('.sdot');
+    const panels       = document.querySelectorAll('.step-panel');
+    const savedDot     = document.getElementById('profile-saved-dot');
+    const btnLabel     = document.getElementById('profile-btn-label');
+    const scrollArea   = document.getElementById('profile-scroll');
+
+    const STEP_TITLES = [
+        'Basic Information',
+        'Physical Health',
+        'Emotional Landscape',
+        'Music Preferences',
+        'Treatment History',
+    ];
+    const TOTAL = 5;
+    let step = 0;
+    let goingBack = false;
+
+    // per-group multi-select state  { groupName: Set<val> }
+    const multiSets = {};
+
+    // ── Open / Close ─────────────────────────────────────────────────
+    function openModal() {
+        modal.style.opacity = '1';
+        modal.style.pointerEvents = 'auto';
+        // Re-trigger card entrance
+        card.style.animation = 'none';
+        void card.offsetWidth;
+        card.style.animation = 'modal-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both';
+    }
+
+    function closeModal() {
+        modal.style.opacity = '0';
+        modal.style.pointerEvents = 'none';
+    }
+
+    openBtn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', closeModal);
+
+    // Keyboard ESC
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && modal.style.pointerEvents !== 'none') closeModal();
+    });
+
+    // ── Step navigation ───────────────────────────────────────────────
+    function goTo(target, back = false) {
+        goingBack = back;
+
+        // Hide current
+        panels[step].classList.remove('active', 'going-back');
+
+        step = target;
+
+        // Show target with direction class
+        const panel = panels[step];
+        panel.classList.remove('active', 'going-back');
+        if (back) panel.classList.add('going-back');
+        // Force reflow, then activate
+        void panel.offsetWidth;
+        panel.classList.add('active');
+
+        // Scroll content to top
+        scrollArea.scrollTop = 0;
+
+        // Update title
+        stepTitle.textContent = STEP_TITLES[step];
+        stepCounter.textContent = String(step + 1).padStart(2, '0') + ' / ' + String(TOTAL).padStart(2, '0');
+
+        // Dots
+        stepDots.forEach((dot, i) => {
+            if (i === step) {
+                dot.style.width = '24px';
+                dot.style.background = 'rgba(255,255,255,0.65)';
+            } else if (i < step) {
+                dot.style.width = '10px';
+                dot.style.background = 'rgba(255,255,255,0.35)';
+            } else {
+                dot.style.width = '8px';
+                dot.style.background = 'rgba(255,255,255,0.13)';
+            }
+        });
+
+        // Prev button
+        if (step === 0) {
+            prevBtn.style.opacity = '0';
+            prevBtn.style.pointerEvents = 'none';
+        } else {
+            prevBtn.style.opacity = '1';
+            prevBtn.style.pointerEvents = 'auto';
+        }
+
+        // Next button label
+        if (step === TOTAL - 1) {
+            nextBtn.innerHTML = '<iconify-icon icon="lucide:check" width="13"></iconify-icon> Save Profile';
+        } else {
+            nextBtn.innerHTML = 'Continue <iconify-icon icon="lucide:arrow-right" width="13"></iconify-icon>';
+        }
+    }
+
+    prevBtn.addEventListener('click', () => { if (step > 0) goTo(step - 1, true); });
+    nextBtn.addEventListener('click', () => {
+        if (step < TOTAL - 1) {
+            goTo(step + 1, false);
+        } else {
+            saveProfile();
+        }
+    });
+
+    // ── Chip logic ────────────────────────────────────────────────────
+    document.querySelectorAll('.p-chip').forEach(btn => {
+        const group   = btn.dataset.group;
+        const val     = btn.dataset.val;
+        const isMulti = btn.hasAttribute('data-multi');
+        const maxSel  = isMulti ? parseInt(btn.dataset.multi, 10) : 1;
+
+        if (!multiSets[group]) multiSets[group] = new Set();
+
+        btn.addEventListener('click', () => {
+            if (isMulti) {
+                if (multiSets[group].has(val)) {
+                    multiSets[group].delete(val);
+                    btn.classList.remove('p-active');
+                } else {
+                    if (maxSel > 1 && multiSets[group].size >= maxSel) return;
+                    multiSets[group].add(val);
+                    btn.classList.add('p-active');
+                }
+            } else {
+                // single-select within group
+                document.querySelectorAll(`.p-chip[data-group="${group}"]`).forEach(b => {
+                    b.classList.remove('p-active');
+                    multiSets[group].clear();
+                });
+                multiSets[group].add(val);
+                btn.classList.add('p-active');
+            }
+        });
+    });
+
+    // ── Slider: Sleep ─────────────────────────────────────────────────
+    const sleepSlider = document.getElementById('p-sleep');
+    const sleepDisp   = document.getElementById('p-sleep-disp');
+    sleepSlider.addEventListener('input', () => {
+        sleepDisp.textContent = sleepSlider.value + ' / 10';
+    });
+
+    // ── Slider: Rhythm ────────────────────────────────────────────────
+    const rhythmSlider = document.getElementById('p-rhythm');
+    const rhythmDisp   = document.getElementById('p-rhythm-disp');
+    const RHYTHM_LABELS = { 1: 'Slow & Soothing', 2: 'Mostly Slow', 3: 'Balanced', 4: 'Mostly Fast', 5: 'Fast & Activating' };
+    rhythmSlider.addEventListener('input', () => {
+        rhythmDisp.textContent = RHYTHM_LABELS[+rhythmSlider.value];
+    });
+
+    // ── Save ──────────────────────────────────────────────────────────
+    function saveProfile() {
+        const data = {
+            name:        document.getElementById('p-name').value.trim(),
+            age:         document.getElementById('p-age').value,
+            gender:      [...(multiSets['gender'] || [])][0] || '',
+            contact:     document.getElementById('p-contact').value.trim(),
+            hearing:     [...(multiSets['hearing'] || [])][0] || '',
+            conditions:  [...(multiSets['conditions'] || [])],
+            medication:  [...(multiSets['medication'] || [])][0] || '',
+            sleep:       +sleepSlider.value,
+            medsNote:    document.getElementById('p-meds-note').value.trim(),
+            emotions:    [...(multiSets['emotions'] || [])],
+            goals:       [...(multiSets['goals'] || [])],
+            fluctuation: [...(multiSets['fluctuation'] || [])],
+            styles:      [...(multiSets['styles'] || [])],
+            sensitive:   document.getElementById('p-sensitive').value.trim(),
+            rhythm:      +rhythmSlider.value,
+            volume:      [...(multiSets['volume'] || [])][0] || '',
+            prevTherapy: [...(multiSets['prevTherapy'] || [])][0] || '',
+            therapyTypes:[...(multiSets['therapyTypes'] || [])],
+            sessions:    [...(multiSets['sessions'] || [])][0] || '',
+            effectiveness:[...(multiSets['effectiveness'] || [])][0] || '',
+            notes:       document.getElementById('p-notes').value.trim(),
+            savedAt:     new Date().toISOString(),
+        };
+
+        try {
+            localStorage.setItem('moodtune-profile', JSON.stringify(data));
+        } catch (_) {}
+
+        // Update header button
+        if (data.name) btnLabel.textContent = data.name;
+        savedDot.classList.remove('hidden');
+
+        closeModal();
+        showToast('Profile saved');
+    }
+
+    // ── Toast notification ────────────────────────────────────────────
+    function showToast(msg) {
+        const t = document.createElement('div');
+        t.style.cssText = 'position:fixed;bottom:9rem;left:50%;transform:translateX(-50%);z-index:200;' +
+            'animation:toast-in 0.4s cubic-bezier(0.16,1,0.3,1) both;' +
+            'background:rgba(15,15,18,0.65);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);' +
+            'border:1px solid rgba(255,255,255,0.14);border-radius:9999px;' +
+            'padding:0.6rem 1.4rem;display:flex;align-items:center;gap:0.5rem;' +
+            'color:rgba(255,255,255,0.75);font-size:0.7rem;letter-spacing:0.1em;font-family:Outfit,sans-serif;';
+        t.innerHTML = '<iconify-icon icon="lucide:check-circle-2" width="14" style="color:rgba(255,255,255,0.5)"></iconify-icon> ' + msg;
+        document.body.appendChild(t);
+        setTimeout(() => {
+            t.style.animation = 'toast-out 0.35s ease forwards';
+            setTimeout(() => t.remove(), 380);
+        }, 2300);
+    }
+
+    // ── Restore saved data on load ────────────────────────────────────
+    function loadProfile() {
+        let data;
+        try { data = JSON.parse(localStorage.getItem('moodtune-profile') || '{}'); }
+        catch (_) { return; }
+        if (!data.savedAt) return;
+
+        // Text fields
+        if (data.name)     { document.getElementById('p-name').value    = data.name;    btnLabel.textContent = data.name; savedDot.classList.remove('hidden'); }
+        if (data.age)      document.getElementById('p-age').value       = data.age;
+        if (data.contact)  document.getElementById('p-contact').value   = data.contact;
+        if (data.medsNote) document.getElementById('p-meds-note').value = data.medsNote;
+        if (data.sensitive)document.getElementById('p-sensitive').value  = data.sensitive;
+        if (data.notes)    document.getElementById('p-notes').value     = data.notes;
+
+        if (data.sleep) {
+            sleepSlider.value       = data.sleep;
+            sleepDisp.textContent   = data.sleep + ' / 10';
+        }
+        if (data.rhythm) {
+            rhythmSlider.value      = data.rhythm;
+            rhythmDisp.textContent  = RHYTHM_LABELS[data.rhythm] || 'Balanced';
+        }
+
+        // Chips — restore active states
+        const SINGLE_GROUPS = ['gender', 'hearing', 'medication', 'volume', 'prevTherapy', 'sessions', 'effectiveness'];
+        const MULTI_KEYS = {
+            conditions:   data.conditions,
+            emotions:     data.emotions,
+            goals:        data.goals,
+            fluctuation:  data.fluctuation,
+            styles:       data.styles,
+            therapyTypes: data.therapyTypes,
+        };
+
+        SINGLE_GROUPS.forEach(g => {
+            const v = data[g];
+            if (!v) return;
+            const btn = document.querySelector(`.p-chip[data-group="${g}"][data-val="${v}"]`);
+            if (btn) { btn.classList.add('p-active'); if (!multiSets[g]) multiSets[g] = new Set(); multiSets[g].add(v); }
+        });
+
+        Object.entries(MULTI_KEYS).forEach(([g, vals]) => {
+            if (!Array.isArray(vals)) return;
+            if (!multiSets[g]) multiSets[g] = new Set();
+            vals.forEach(v => {
+                multiSets[g].add(v);
+                const btn = document.querySelector(`.p-chip[data-group="${g}"][data-val="${v}"]`);
+                if (btn) btn.classList.add('p-active');
+            });
+        });
+    }
+
+    // ── Init ──────────────────────────────────────────────────────────
+    loadProfile();
+    goTo(0);
+
 })();
 </script>
 </body>

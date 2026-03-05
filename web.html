@@ -564,6 +564,15 @@
             from { opacity: 1; }
             to   { opacity: 0; }
         }
+
+        /* Frequency Info Card */
+        #freq-card {
+            transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+        }
+        #freq-card .freq-inner {
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-white/20 selection:text-white overflow-hidden flex flex-col h-screen">
@@ -593,7 +602,7 @@
                     <span id="profile-btn-label">My Profile</span>
                     <span id="profile-saved-dot" class="hidden w-1.5 h-1.5 rounded-full bg-white/50 group-hover:bg-white transition-all"></span>
                 </button>
-                <button class="text-xs font-light px-5 py-2.5 rounded-full border transition-all duration-300 bg-transparent border-white/10 text-white/50 hover:border-white/30 hover:text-white flex items-center gap-2">
+                <button id="reset-aura-btn" class="text-xs font-light px-5 py-2.5 rounded-full border transition-all duration-300 bg-transparent border-white/10 text-white/50 hover:border-white/30 hover:text-white flex items-center gap-2">
                     <iconify-icon icon="lucide:rotate-ccw" width="12"></iconify-icon>
                     Reset Aura
                 </button>
@@ -624,9 +633,13 @@
                 <!-- Row 1 -->
                 <div class="flex items-center justify-center gap-3 flex-wrap">
                     <span class="text-[10px] text-white/30 uppercase tracking-[0.3em] font-medium mr-2">Mode</span>
-                    <button data-mode="focus" class="mode-chip px-5 py-2 rounded-full text-xs font-light tracking-wider border border-white/5 bg-transparent text-white/50 hover:border-white/20 hover:text-white transition-all cursor-pointer select-none">Deep Focus</button>
-                    <button data-mode="calm"  class="mode-chip px-5 py-2 rounded-full text-xs font-light tracking-wider border border-white/5 bg-transparent text-white/50 hover:border-white/20 hover:text-white transition-all cursor-pointer select-none">Calm Down</button>
-                    <button data-mode="sleep" class="mode-chip px-5 py-2 rounded-full text-xs font-light tracking-wider border border-white/5 bg-transparent text-white/50 hover:border-white/20 hover:text-white transition-all cursor-pointer select-none">Drift to Sleep</button>
+                    <button data-mode="focus"   class="mode-chip px-5 py-2 rounded-full text-xs font-light tracking-wider border border-white/5 bg-transparent text-white/50 hover:border-white/20 hover:text-white transition-all cursor-pointer select-none">Deep Focus</button>
+                    <button data-mode="calm"    class="mode-chip px-5 py-2 rounded-full text-xs font-light tracking-wider border border-white/5 bg-transparent text-white/50 hover:border-white/20 hover:text-white transition-all cursor-pointer select-none">Calm Down</button>
+                    <button data-mode="sleep"   class="mode-chip px-5 py-2 rounded-full text-xs font-light tracking-wider border border-white/5 bg-transparent text-white/50 hover:border-white/20 hover:text-white transition-all cursor-pointer select-none">Drift to Sleep</button>
+                    <button data-mode="anxious" class="mode-chip px-5 py-2 rounded-full text-xs font-light tracking-wider border border-white/5 bg-transparent text-white/50 hover:border-white/20 hover:text-white transition-all cursor-pointer select-none">Anxiety Relief</button>
+                    <button data-mode="ground"  class="mode-chip px-5 py-2 rounded-full text-xs font-light tracking-wider border border-white/5 bg-transparent text-white/50 hover:border-white/20 hover:text-white transition-all cursor-pointer select-none">Grounding</button>
+                    <button data-mode="energy"  class="mode-chip px-5 py-2 rounded-full text-xs font-light tracking-wider border border-white/5 bg-transparent text-white/50 hover:border-white/20 hover:text-white transition-all cursor-pointer select-none">Energy Boost</button>
+                    <button data-mode="trauma"  class="mode-chip px-5 py-2 rounded-full text-xs font-light tracking-wider border border-white/5 bg-transparent text-white/50 hover:border-white/20 hover:text-white transition-all cursor-pointer select-none">Trauma Gentle</button>
                 </div>
                 <!-- Row 2 -->
                 <div class="flex items-center justify-center gap-3 flex-wrap">
@@ -695,7 +708,7 @@
                     <button id="play-btn" class="w-20 h-20 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-white/20 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.05)] hover:shadow-[0_0_40px_rgba(255,255,255,0.15)] backdrop-blur-md group">
                         <iconify-icon id="play-icon" icon="lucide:pause" width="28" class="group-hover:scale-95 transition-transform"></iconify-icon>
                     </button>
-                    <button class="text-white/40 hover:text-white transition-colors hover:scale-110 duration-300">
+                    <button id="skip-forward-btn" class="text-white/40 hover:text-white transition-colors hover:scale-110 duration-300">
                         <iconify-icon icon="lucide:skip-forward" width="24"></iconify-icon>
                     </button>
                 </div>
@@ -710,8 +723,28 @@
                     </div>
                     <div class="flex justify-between items-center">
                         <span id="time-elapsed" class="text-xs font-mono text-white/30">15:00</span>
-                        <span id="player-subtext" class="text-[10px] text-white/40 font-light tracking-widest uppercase">Binaural · 40Hz</span>
+                        <button id="freq-toggle" class="flex items-center gap-1.5 group/freq cursor-pointer">
+                            <span id="player-subtext" class="text-[10px] text-white/40 font-light tracking-widest uppercase group-hover/freq:text-white/65 transition-colors duration-300">Binaural · 40Hz</span>
+                            <iconify-icon icon="lucide:info" width="10" class="text-white/18 group-hover/freq:text-white/45 transition-colors duration-300 flex-shrink-0"></iconify-icon>
+                        </button>
                         <span id="time-total" class="text-xs font-mono text-white/30">45:00</span>
+                    </div>
+
+                    <!-- Frequency Info Card -->
+                    <div id="freq-card" class="w-full overflow-hidden" style="max-height:0;opacity:0;">
+                        <div class="freq-inner flex items-start gap-4">
+                            <div class="flex-shrink-0 w-9 h-9 rounded-full border border-white/8 bg-white/[0.04] flex items-center justify-center mt-0.5">
+                                <iconify-icon id="freq-icon" icon="lucide:brain" width="15" class="text-white/40"></iconify-icon>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2 mb-1.5">
+                                    <span id="freq-wave" class="text-[10px] text-white/32 uppercase tracking-[0.18em] font-medium">Gamma Wave</span>
+                                    <span class="text-white/15 text-[10px] select-none">·</span>
+                                    <span id="freq-hz" class="text-[10px] font-mono text-white/28 tracking-wider">40 Hz</span>
+                                </div>
+                                <p id="freq-desc" class="text-[11px] text-white/42 font-light leading-relaxed"></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1087,6 +1120,10 @@
             interpretation: 'Focus · Structured · High density · 40Hz',
             recordSpeed:    '3.5s',
             glowColor:      'rgba(180, 198, 218, 0.22)',
+            freqTitle:      'Gamma Wave',
+            freqHz:         '40 Hz',
+            freqIcon:       'lucide:brain',
+            freqDesc:       "Gamma waves enhance cognitive binding — the brain's ability to connect disparate thoughts. Linked to heightened focus, memory consolidation, and peak mental performance.",
         },
         calm: {
             title:          'Soft Calm',
@@ -1094,6 +1131,10 @@
             interpretation: 'Calm · Warm · Slow · Low density',
             recordSpeed:    '9s',
             glowColor:      'rgba(251, 191, 36, 0.16)',
+            freqTitle:      'Theta Wave',
+            freqHz:         '6 Hz',
+            freqIcon:       'lucide:waves',
+            freqDesc:       'Theta frequencies bridge waking and sleep, unlocking deep relaxation and creative intuition. Widely used in meditation and emotional processing therapy.',
         },
         sleep: {
             title:          'Sleep Drift',
@@ -1101,6 +1142,54 @@
             interpretation: 'Sleep · Soft · Delta wave · Fade-out',
             recordSpeed:    '18s',
             glowColor:      'rgba(139, 92, 246, 0.2)',
+            freqTitle:      'Delta Wave',
+            freqHz:         '2 Hz',
+            freqIcon:       'lucide:moon',
+            freqDesc:       'Delta waves dominate restorative sleep, supporting cellular repair and memory consolidation. Gentle entrainment guides the nervous system into deep, healing rest.',
+        },
+        anxious: {
+            title:          'Anxiety Relief',
+            subtext:        'Alpha · 10Hz',
+            interpretation: 'Anxiety · Soothing · Alpha wave · Nervous system reset',
+            recordSpeed:    '12s',
+            glowColor:      'rgba(134, 239, 172, 0.13)',
+            freqTitle:      'Alpha Wave',
+            freqHz:         '10 Hz',
+            freqIcon:       'lucide:heart-pulse',
+            freqDesc:       'Alpha waves reduce cortisol and quiet the default mode network, lowering anxiety and inviting calm alertness without sedation.',
+        },
+        ground: {
+            title:          'Grounding',
+            subtext:        'Schumann · 7.83Hz',
+            interpretation: 'Grounding · Stabilising · Earth resonance · Present moment',
+            recordSpeed:    '15s',
+            glowColor:      'rgba(161, 140, 105, 0.18)',
+            freqTitle:      'Schumann Resonance',
+            freqHz:         '7.83 Hz',
+            freqIcon:       'lucide:globe',
+            freqDesc:       "Earth's natural electromagnetic frequency. Promotes a sense of safety and stability, reduces dissociation, and reconnects awareness to the present.",
+        },
+        energy: {
+            title:          'Energy Boost',
+            subtext:        'Beta · 18Hz',
+            interpretation: 'Energy · Activating · Beta wave · Motivation drive',
+            recordSpeed:    '2.5s',
+            glowColor:      'rgba(251, 146, 60, 0.18)',
+            freqTitle:      'Beta Wave',
+            freqHz:         '18 Hz',
+            freqIcon:       'lucide:zap',
+            freqDesc:       'Beta waves elevate alertness, fuel motivation, and enhance physical readiness. Used in performance coaching and low-energy mood recovery.',
+        },
+        trauma: {
+            title:          'Trauma Gentle',
+            subtext:        'Infra-Low · 0.5Hz',
+            interpretation: 'Trauma · Tender · Infra-low · Nervous system regulation',
+            recordSpeed:    '28s',
+            glowColor:      'rgba(199, 168, 218, 0.15)',
+            freqTitle:      'Infra-Low Wave',
+            freqHz:         '0.5 Hz',
+            freqIcon:       'lucide:feather',
+            freqDesc:       'Sub-delta frequencies gently regulate the autonomic nervous system, creating safety for trauma processing without overwhelming the stress response.',
         },
     };
 
@@ -1111,7 +1200,7 @@
     };
 
     // Speed multiplier per mode — higher = slower / more hypnotic
-    const EQ_SPEED_FACTOR = { focus: 0.62, calm: 1.45, sleep: 3.20 };
+    const EQ_SPEED_FACTOR = { focus: 0.62, calm: 1.45, sleep: 3.20, anxious: 1.10, ground: 1.80, energy: 0.45, trauma: 4.50 };
 
     // Tailwind class sets for chips (all classes must already exist in DOM so CDN generates them)
     const ON  = ['border-white/20', 'bg-white/10', 'text-white', 'shadow-[0_0_15px_rgba(255,255,255,0.05)]'];
@@ -1156,6 +1245,15 @@
     const interpText    = document.getElementById('interpreting-text');
     const eqBars        = document.getElementById('eq-bars');
     let   eqBarEls      = [];   // populated by waveform generation below
+    const skipForwardBtn = document.getElementById('skip-forward-btn');
+    const resetAuraBtn   = document.getElementById('reset-aura-btn');
+    const freqCard       = document.getElementById('freq-card');
+    const freqToggle     = document.getElementById('freq-toggle');
+    const freqIconEl     = document.getElementById('freq-icon');
+    const freqWaveEl     = document.getElementById('freq-wave');
+    const freqHzEl       = document.getElementById('freq-hz');
+    const freqDescEl     = document.getElementById('freq-desc');
+    let   freqCardOpen   = false;
 
     // ── EQ speed update ───────────────────────────────────────────────────
     // Scales each bar's animation-duration by the mode-specific factor so
@@ -1217,6 +1315,33 @@
         flashInterpText();
     }
 
+    // ── Frequency card content ────────────────────────────────────────────
+    function updateFreqCard(mode) {
+        const cfg = MODES[mode];
+        if (!cfg || !freqIconEl) return;
+        freqIconEl.setAttribute('icon', cfg.freqIcon);
+        freqWaveEl.textContent = cfg.freqTitle;
+        freqHzEl.textContent   = cfg.freqHz;
+        freqDescEl.textContent = cfg.freqDesc;
+    }
+
+    // ── Toast (global so profile script can reuse it) ─────────────────────
+    window.showToast = function (msg) {
+        const t = document.createElement('div');
+        t.style.cssText = 'position:fixed;bottom:9rem;left:50%;transform:translateX(-50%);z-index:200;' +
+            'animation:toast-in 0.4s cubic-bezier(0.16,1,0.3,1) both;' +
+            'background:rgba(15,15,18,0.65);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);' +
+            'border:1px solid rgba(255,255,255,0.14);border-radius:9999px;' +
+            'padding:0.6rem 1.4rem;display:flex;align-items:center;gap:0.5rem;' +
+            'color:rgba(255,255,255,0.75);font-size:0.7rem;letter-spacing:0.1em;font-family:Outfit,sans-serif;';
+        t.innerHTML = '<iconify-icon icon="lucide:check-circle-2" width="14" style="color:rgba(255,255,255,0.5)"></iconify-icon> ' + msg;
+        document.body.appendChild(t);
+        setTimeout(() => {
+            t.style.animation = 'toast-out 0.35s ease forwards';
+            setTimeout(() => t.remove(), 380);
+        }, 2300);
+    };
+
     // ── Player Card state ─────────────────────────────────────────────────
     function applyMode(mode) {
         const cfg = MODES[mode];
@@ -1246,6 +1371,9 @@
 
         // Adjust EQ bounce tempo to match the new mode's frequency feel
         updateEqSpeed(mode);
+
+        // Refresh frequency info card content (keeps open state, only updates text)
+        updateFreqCard(mode);
     }
 
     // ── Smooth progress reset ─────────────────────────────────────────────
@@ -1455,6 +1583,57 @@
         elapsedSec = 0;
         resetProgressAnimated();
         if (!isPlaying) setPlaying(true);
+    });
+
+    // ── Frequency info card toggle ────────────────────────────────────────
+    freqToggle.addEventListener('click', () => {
+        freqCardOpen = !freqCardOpen;
+        freqCard.style.maxHeight = freqCardOpen ? '180px' : '0';
+        freqCard.style.opacity   = freqCardOpen ? '1'     : '0';
+    });
+
+    // ── Skip Forward — advance 30 s ───────────────────────────────────────
+    skipForwardBtn.addEventListener('click', () => {
+        elapsedSec = Math.min(elapsedSec + 30, totalSec);
+        updateProgressVisuals(elapsedSec);
+        if (elapsedSec >= totalSec) { setPlaying(false); }
+        else if (!isPlaying) { setPlaying(true); }
+    });
+
+    // ── Reset Aura — restore full initial state ───────────────────────────
+    resetAuraBtn.addEventListener('click', () => {
+        // Close freq card if open
+        if (freqCardOpen) {
+            freqCardOpen = false;
+            freqCard.style.maxHeight = '0';
+            freqCard.style.opacity   = '0';
+        }
+        // Reset mode & vibes
+        currentMode   = 'focus';
+        selectedVibes = new Set();
+        document.querySelectorAll('.mode-chip').forEach(b => setChipActive(b, b.dataset.mode === 'focus'));
+        document.querySelectorAll('.vibe-chip').forEach(b => setChipActive(b, false));
+        // Reset drawer controls
+        currentIntensity = 3;
+        currentDuration  = 45;
+        currentEnv       = 'Rain';
+        totalSec         = 45 * 60;
+        summaryIntensity.textContent = INTENSITY_LABELS[3];
+        summaryDuration.textContent  = '45 min';
+        summaryEnv.textContent       = 'Rain';
+        timeTotal.textContent        = '45:00';
+        document.querySelectorAll('.intensity-btn').forEach(b => setDrawerActive(b, +b.dataset.intensity === 3));
+        document.querySelectorAll('.duration-btn').forEach(b  => setDrawerActive(b, +b.dataset.duration  === 45));
+        document.querySelectorAll('.env-btn').forEach(b       => setDrawerActive(b, b.dataset.env === 'Rain'));
+        // Clear input
+        document.querySelector('input[type="text"]').value = '';
+        // Apply mode & reset progress
+        applyMode('focus');
+        refreshInterpretation();
+        elapsedSec = 0;
+        resetProgressAnimated();
+        if (!isPlaying) setPlaying(true);
+        window.showToast('Aura reset');
     });
 
     // ── Play / Pause ──────────────────────────────────────────────────────

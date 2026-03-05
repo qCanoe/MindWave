@@ -720,6 +720,12 @@
                         <div id="eq-bars" class="absolute inset-0 flex items-end" style="gap:2px"></div>
                         <!-- Vertical playhead cursor -->
                         <div id="progress-thumb" class="absolute top-0 bottom-0 w-px bg-white/55 shadow-[0_0_8px_rgba(255,255,255,0.75)] opacity-0 group-hover/progress:opacity-100 pointer-events-none -translate-x-1/2" style="left:33.3%"></div>
+                        <!-- Hover time tooltip -->
+                        <div id="progress-tooltip" class="absolute bottom-full mb-2.5 -translate-x-1/2 pointer-events-none whitespace-nowrap" style="left:0;opacity:0;transition:opacity 0.15s ease;">
+                            <div class="px-2.5 py-1 rounded-lg border border-white/10" style="background:rgba(8,8,12,0.80);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);">
+                                <span id="progress-tooltip-time" class="font-mono text-[10px] text-white/72 tracking-widest">00:00</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="flex justify-between items-center">
                         <span id="time-elapsed" class="text-xs font-mono text-white/30">15:00</span>
@@ -1456,8 +1462,11 @@
         });
     });
 
-    // ── Progress bar drag ─────────────────────────────────────────────────
+    // ── Progress bar drag & click-to-seek ────────────────────────────────
     let isDragging = false;
+
+    const progressTooltip     = document.getElementById('progress-tooltip');
+    const progressTooltipTime = document.getElementById('progress-tooltip-time');
 
     function clientXFromEvent(e) {
         return e.touches ? e.touches[0].clientX : e.clientX;
@@ -1472,6 +1481,7 @@
 
     function onDragStart(e) {
         isDragging = true;
+        // Snap thumb instantly on both click and drag start
         progressThumb.style.transition = 'opacity 0.2s ease, left 0s';
         progressTrack.classList.add('dragging');
         scrubTo(e);
@@ -1486,7 +1496,10 @@
     function onDragEnd() {
         if (!isDragging) return;
         isDragging = false;
-        progressThumb.style.transition = 'opacity 0.2s ease, left 0.9s linear';
+        // Restore smooth transition only after the seek has settled
+        requestAnimationFrame(() => {
+            progressThumb.style.transition = 'opacity 0.2s ease, left 0.9s linear';
+        });
         progressTrack.classList.remove('dragging');
     }
 
@@ -1496,6 +1509,22 @@
     window.addEventListener('touchmove',  onDragMove, { passive: false });
     window.addEventListener('mouseup',    onDragEnd);
     window.addEventListener('touchend',   onDragEnd);
+
+    // ── Progress bar hover tooltip ────────────────────────────────────────
+    progressTrack.addEventListener('mousemove', e => {
+        const rect     = progressTrack.getBoundingClientRect();
+        const pct      = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        const hoverSec = Math.round(pct * totalSec);
+        // Clamp tooltip so it never overflows the card edges
+        const clampedPct = Math.max(4, Math.min(96, pct * 100));
+        progressTooltipTime.textContent = fmt(hoverSec);
+        progressTooltip.style.left      = clampedPct + '%';
+        progressTooltip.style.opacity   = '1';
+    });
+
+    progressTrack.addEventListener('mouseleave', () => {
+        progressTooltip.style.opacity = '0';
+    });
 
     // ── Drawer helpers ────────────────────────────────────────────────────
     function setDrawerActive(btn, on) {

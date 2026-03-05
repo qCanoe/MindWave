@@ -593,7 +593,7 @@
                     <span id="profile-btn-label">My Profile</span>
                     <span id="profile-saved-dot" class="hidden w-1.5 h-1.5 rounded-full bg-white/50 group-hover:bg-white transition-all"></span>
                 </button>
-                <button class="text-xs font-light px-5 py-2.5 rounded-full border transition-all duration-300 bg-transparent border-white/10 text-white/50 hover:border-white/30 hover:text-white flex items-center gap-2">
+                <button id="reset-aura-btn" class="text-xs font-light px-5 py-2.5 rounded-full border transition-all duration-300 bg-transparent border-white/10 text-white/50 hover:border-white/30 hover:text-white flex items-center gap-2">
                     <iconify-icon icon="lucide:rotate-ccw" width="12"></iconify-icon>
                     Reset Aura
                 </button>
@@ -695,7 +695,7 @@
                     <button id="play-btn" class="w-20 h-20 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-white/20 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.05)] hover:shadow-[0_0_40px_rgba(255,255,255,0.15)] backdrop-blur-md group">
                         <iconify-icon id="play-icon" icon="lucide:pause" width="28" class="group-hover:scale-95 transition-transform"></iconify-icon>
                     </button>
-                    <button class="text-white/40 hover:text-white transition-colors hover:scale-110 duration-300">
+                    <button id="skip-forward-btn" class="text-white/40 hover:text-white transition-colors hover:scale-110 duration-300">
                         <iconify-icon icon="lucide:skip-forward" width="24"></iconify-icon>
                     </button>
                 </div>
@@ -1156,6 +1156,8 @@
     const interpText    = document.getElementById('interpreting-text');
     const eqBars        = document.getElementById('eq-bars');
     let   eqBarEls      = [];   // populated by waveform generation below
+    const skipForwardBtn = document.getElementById('skip-forward-btn');
+    const resetAuraBtn   = document.getElementById('reset-aura-btn');
 
     // ── EQ speed update ───────────────────────────────────────────────────
     // Scales each bar's animation-duration by the mode-specific factor so
@@ -1455,6 +1457,57 @@
         elapsedSec = 0;
         resetProgressAnimated();
         if (!isPlaying) setPlaying(true);
+    });
+
+    // ── Toast (global so profile script can reuse it) ─────────────────────
+    window.showToast = function (msg) {
+        const t = document.createElement('div');
+        t.style.cssText = 'position:fixed;bottom:9rem;left:50%;transform:translateX(-50%);z-index:200;' +
+            'animation:toast-in 0.4s cubic-bezier(0.16,1,0.3,1) both;' +
+            'background:rgba(15,15,18,0.65);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);' +
+            'border:1px solid rgba(255,255,255,0.14);border-radius:9999px;' +
+            'padding:0.6rem 1.4rem;display:flex;align-items:center;gap:0.5rem;' +
+            'color:rgba(255,255,255,0.75);font-size:0.7rem;letter-spacing:0.1em;font-family:Outfit,sans-serif;';
+        t.innerHTML = '<iconify-icon icon="lucide:check-circle-2" width="14" style="color:rgba(255,255,255,0.5)"></iconify-icon> ' + msg;
+        document.body.appendChild(t);
+        setTimeout(() => {
+            t.style.animation = 'toast-out 0.35s ease forwards';
+            setTimeout(() => t.remove(), 380);
+        }, 2300);
+    };
+
+    // ── Skip Forward — advance 30 s ───────────────────────────────────────
+    skipForwardBtn.addEventListener('click', () => {
+        elapsedSec = Math.min(elapsedSec + 30, totalSec);
+        updateProgressVisuals(elapsedSec);
+        if (elapsedSec >= totalSec) { setPlaying(false); }
+        else if (!isPlaying) { setPlaying(true); }
+    });
+
+    // ── Reset Aura — restore full initial state ───────────────────────────
+    resetAuraBtn.addEventListener('click', () => {
+        currentMode   = 'focus';
+        selectedVibes = new Set();
+        document.querySelectorAll('.mode-chip').forEach(b => setChipActive(b, b.dataset.mode === 'focus'));
+        document.querySelectorAll('.vibe-chip').forEach(b => setChipActive(b, false));
+        currentIntensity = 3;
+        currentDuration  = 45;
+        currentEnv       = 'Rain';
+        totalSec         = 45 * 60;
+        summaryIntensity.textContent = INTENSITY_LABELS[3];
+        summaryDuration.textContent  = '45 min';
+        summaryEnv.textContent       = 'Rain';
+        timeTotal.textContent        = '45:00';
+        document.querySelectorAll('.intensity-btn').forEach(b => setDrawerActive(b, +b.dataset.intensity === 3));
+        document.querySelectorAll('.duration-btn').forEach(b  => setDrawerActive(b, +b.dataset.duration  === 45));
+        document.querySelectorAll('.env-btn').forEach(b       => setDrawerActive(b, b.dataset.env === 'Rain'));
+        document.querySelector('input[type="text"]').value = '';
+        applyMode('focus');
+        refreshInterpretation();
+        elapsedSec = 0;
+        resetProgressAnimated();
+        if (!isPlaying) setPlaying(true);
+        window.showToast('Aura reset');
     });
 
     // ── Play / Pause ──────────────────────────────────────────────────────

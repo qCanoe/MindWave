@@ -437,11 +437,11 @@
 
         /* Profile chip */
         .p-chip {
-            padding: 0.45rem 1.1rem;
+            padding: 0.5rem 1.2rem;
             border-radius: 9999px;
-            font-size: 0.68rem;
+            font-size: 0.76rem;
             font-weight: 300;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.06em;
             border: 1px solid rgba(255,255,255,0.07);
             background: transparent;
             color: rgba(255,255,255,0.38);
@@ -482,7 +482,7 @@
             width: 100%;
             background: transparent;
             color: rgba(255,255,255,0.88);
-            font-size: 0.84rem;
+            font-size: 0.95rem;
             letter-spacing: 0.02em;
             outline: none;
             caret-color: white;
@@ -495,18 +495,18 @@
         /* Profile label */
         .p-label {
             display: block;
-            font-size: 0.6rem;
+            font-size: 0.68rem;
             text-transform: uppercase;
-            letter-spacing: 0.25em;
+            letter-spacing: 0.22em;
             font-weight: 500;
             color: rgba(255,255,255,0.28);
-            margin-bottom: 0.7rem;
+            margin-bottom: 0.75rem;
         }
         .p-label-note {
             text-transform: none;
             letter-spacing: normal;
             font-weight: 300;
-            font-size: 0.65rem;
+            font-size: 0.72rem;
             color: rgba(255,255,255,0.18);
         }
 
@@ -786,14 +786,14 @@
     <div id="profile-backdrop" class="absolute inset-0 bg-black/65 backdrop-blur-sm cursor-pointer"></div>
 
     <!-- Card -->
-    <div id="profile-card" class="relative glass-panel rounded-[2.5rem] w-full max-w-xl mx-5 flex flex-col shadow-[0_40px_80px_rgba(0,0,0,0.65)]" style="max-height:88vh;border:1px solid rgba(255,255,255,0.1);">
+    <div id="profile-card" class="relative glass-panel rounded-[2.5rem] w-full max-w-xl mx-5 flex flex-col shadow-[0_40px_80px_rgba(0,0,0,0.65)]" style="height:min(88vh,720px);border:1px solid rgba(255,255,255,0.1);">
 
         <!-- ── Card Header ─────────────────────────────────────────── -->
         <div class="px-9 pt-9 pb-5 flex-shrink-0">
             <div class="flex items-start justify-between mb-5">
                 <div>
                     <span class="p-label" style="margin-bottom:.45rem">Therapy Profile</span>
-                    <h2 id="p-step-title" class="font-display text-[1.85rem] text-white/90 italic tracking-wide leading-tight">Basic Information</h2>
+                    <h2 id="p-step-title" class="font-display text-[2.1rem] text-white/90 italic tracking-wide leading-tight">Basic Information</h2>
                 </div>
                 <button id="profile-close" class="mt-1 w-9 h-9 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/45 hover:text-white hover:bg-white/10 transition-all duration-300 flex-shrink-0">
                     <iconify-icon icon="lucide:x" width="15"></iconify-icon>
@@ -807,7 +807,7 @@
                 <div class="sdot h-1.5 rounded-full bg-white/13" style="width:8px"  data-sdot="2"></div>
                 <div class="sdot h-1.5 rounded-full bg-white/13" style="width:8px"  data-sdot="3"></div>
                 <div class="sdot h-1.5 rounded-full bg-white/13" style="width:8px"  data-sdot="4"></div>
-                <span id="p-step-counter" class="ml-3 text-[10px] font-mono text-white/22 tracking-widest">01 / 05</span>
+                <span id="p-step-counter" class="ml-3 text-[11px] font-mono text-white/22 tracking-widest">01 / 05</span>
             </div>
         </div>
 
@@ -887,12 +887,12 @@
                 <div class="mb-7">
                     <div class="flex items-center justify-between mb-3">
                         <label class="p-label" style="margin-bottom:0">Sleep Quality</label>
-                        <span id="p-sleep-disp" class="text-[10px] font-mono text-white/40 tracking-widest">6 / 10</span>
+                        <span id="p-sleep-disp" class="text-[11px] font-mono text-white/40 tracking-widest">6 / 10</span>
                     </div>
                     <input id="p-sleep" class="p-slider" type="range" min="1" max="10" value="6" step="1">
                     <div class="flex justify-between mt-1.5">
-                        <span class="text-[10px] text-white/20">Poor</span>
-                        <span class="text-[10px] text-white/20">Excellent</span>
+                        <span class="text-[11px] text-white/20">Poor</span>
+                        <span class="text-[11px] text-white/20">Excellent</span>
                     </div>
                 </div>
 
@@ -977,12 +977,12 @@
                 <div class="mb-7">
                     <div class="flex items-center justify-between mb-3">
                         <label class="p-label" style="margin-bottom:0">Rhythm Preference</label>
-                        <span id="p-rhythm-disp" class="text-[10px] font-mono text-white/40 tracking-widest">Balanced</span>
+                        <span id="p-rhythm-disp" class="text-[11px] font-mono text-white/40 tracking-widest">Balanced</span>
                     </div>
                     <input id="p-rhythm" class="p-slider" type="range" min="1" max="5" value="3" step="1">
                     <div class="flex justify-between mt-1.5">
-                        <span class="text-[10px] text-white/20">Slow &amp; Soothing</span>
-                        <span class="text-[10px] text-white/20">Fast &amp; Activating</span>
+                        <span class="text-[11px] text-white/20">Slow &amp; Soothing</span>
+                        <span class="text-[11px] text-white/20">Fast &amp; Activating</span>
                     </div>
                 </div>
 

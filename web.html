@@ -314,7 +314,7 @@
         
         .ethereal-input input {
             text-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
-        }
+            }
         
         .ethereal-input input::placeholder {
             text-shadow: none;
@@ -573,6 +573,51 @@
             padding-top: 1rem;
             border-top: 1px solid rgba(255,255,255,0.05);
         }
+
+        /* ── Suno Generation Overlay ──────────────────────────────────── */
+        @keyframes suno-spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+        @keyframes suno-pulse-ring {
+            0%   { transform: scale(0.92); opacity: 0.7; }
+            50%  { transform: scale(1.08); opacity: 0.3; }
+            100% { transform: scale(0.92); opacity: 0.7; }
+        }
+        @keyframes suno-dots {
+            0%, 80%, 100% { transform: scale(0); opacity: 0; }
+            40%            { transform: scale(1); opacity: 1; }
+        }
+        .suno-dot { display: inline-block; border-radius: 50%; animation: suno-dots 1.4s ease-in-out infinite both; }
+        .suno-dot:nth-child(1) { animation-delay: 0s; }
+        .suno-dot:nth-child(2) { animation-delay: 0.2s; }
+        .suno-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        #suno-overlay {
+            transition: opacity 0.4s ease;
+        }
+
+        /* ── API Key Modal ─────────────────────────────────────────────── */
+        #apikey-modal { transition: opacity 0.4s ease; }
+        #apikey-card  { animation: modal-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+        /* Tune button loading state */
+        #tune-btn.loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        @keyframes tune-spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+        #tune-btn.loading #tune-icon {
+            animation: tune-spin 1s linear infinite;
+        }
+
+        /* Generated track badge on player */
+        #suno-track-badge {
+            transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.16,1,0.3,1);
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-white/20 selection:text-white overflow-hidden flex flex-col h-screen">
@@ -602,6 +647,11 @@
                     <span id="profile-btn-label">My Profile</span>
                     <span id="profile-saved-dot" class="hidden w-1.5 h-1.5 rounded-full bg-white/50 group-hover:bg-white transition-all"></span>
                 </button>
+                <button id="api-key-btn" class="text-xs font-light px-5 py-2.5 rounded-full border transition-all duration-300 bg-transparent border-white/10 text-white/50 hover:border-white/30 hover:text-white flex items-center gap-2">
+                    <iconify-icon icon="lucide:key-round" width="13"></iconify-icon>
+                    <span id="api-key-btn-label">API Key</span>
+                    <span id="api-key-dot" class="hidden w-1.5 h-1.5 rounded-full bg-emerald-400/70 group-hover:bg-emerald-300 transition-all"></span>
+                </button>
                 <button id="reset-aura-btn" class="text-xs font-light px-5 py-2.5 rounded-full border transition-all duration-300 bg-transparent border-white/10 text-white/50 hover:border-white/30 hover:text-white flex items-center gap-2">
                     <iconify-icon icon="lucide:rotate-ccw" width="12"></iconify-icon>
                     Reset Aura
@@ -620,11 +670,11 @@
             </h1>
             
             <div class="relative flex items-center group w-full ethereal-input rounded-full border border-white/10 transition-all duration-500 animate-stagger-2">
-                <input type="text" placeholder="e.g., anxious, need focus, can't sleep..." 
+                <input id="mood-input" type="text" placeholder="e.g., anxious, need focus, can't sleep..." 
                        class="w-full bg-transparent py-5 pl-8 pr-32 text-white/90 placeholder:text-white/30 focus:outline-none text-lg font-normal tracking-wide caret-white selection:bg-white/20">
-                <button class="absolute right-3 h-10 px-6 rounded-full bg-white/10 text-white text-sm font-medium hover:bg-white/20 transition-all flex items-center gap-2 backdrop-blur-md border border-white/5 hover:scale-105">
-                    <iconify-icon icon="lucide:sparkles" width="16"></iconify-icon>
-                    Tune
+                <button id="tune-btn" class="absolute right-3 h-10 px-6 rounded-full bg-white/10 text-white text-sm font-medium hover:bg-white/20 transition-all flex items-center gap-2 backdrop-blur-md border border-white/5 hover:scale-105">
+                    <iconify-icon id="tune-icon" icon="lucide:sparkles" width="16"></iconify-icon>
+                    <span id="tune-label">Tune</span>
                 </button>
             </div>
 
@@ -667,11 +717,18 @@
                         <h2 id="player-title" class="text-3xl text-white flex items-center gap-3 font-display italic tracking-wide">
                             Deep Focus
                         </h2>
+                        <!-- Suno generated track badge -->
+                        <div id="suno-track-badge" class="mt-1.5 flex items-center gap-1.5 opacity-0 translate-y-1 pointer-events-none">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400/80 flex-shrink-0"></span>
+                            <span id="suno-track-title" class="text-[10px] text-white/40 font-light tracking-wide truncate max-w-[180px]">AI Generated</span>
+                        </div>
                     </div>
                     <button id="regen-btn" class="w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-all duration-500">
                         <iconify-icon id="regen-icon" icon="lucide:refresh-cw" width="16"></iconify-icon>
                     </button>
                 </div>
+                <!-- Hidden audio element for Suno playback -->
+                <audio id="suno-audio" preload="auto" crossorigin="anonymous" style="display:none"></audio>
 
                 <!-- Minimalist Gramophone Visualizer -->
                 <div id="gramophone-container" class="gramophone-container">
@@ -815,6 +872,73 @@
             </div>
         </div>
     </div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SUNO GENERATION OVERLAY
+════════════════════════════════════════════════════════════════ -->
+<div id="suno-overlay" class="fixed inset-0 z-[90] flex items-center justify-center" style="opacity:0;pointer-events:none;background:rgba(3,3,5,0.72);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);">
+    <div class="flex flex-col items-center gap-6 text-center px-8">
+        <!-- Pulse rings -->
+        <div class="relative w-24 h-24 flex items-center justify-center">
+            <div class="absolute inset-0 rounded-full border border-white/10 animate-ping" style="animation-duration:2s;"></div>
+            <div class="absolute inset-2 rounded-full border border-white/8" style="animation:suno-pulse-ring 2.4s ease-in-out infinite;"></div>
+            <div class="w-16 h-16 rounded-full border border-white/20 bg-white/5 flex items-center justify-center backdrop-blur-md">
+                <iconify-icon id="suno-overlay-icon" icon="lucide:music-4" width="28" class="text-white/70" style="animation:suno-spin 3s linear infinite;"></iconify-icon>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2">
+            <p id="suno-status-text" class="text-white/80 text-sm font-light tracking-wider">Composing your soundscape</p>
+            <p id="suno-status-sub" class="text-white/35 text-xs font-light tracking-widest">This may take 30–120 seconds</p>
+        </div>
+        <!-- Three dot loader -->
+        <div class="flex gap-2">
+            <span class="suno-dot w-2 h-2 bg-white/50"></span>
+            <span class="suno-dot w-2 h-2 bg-white/50"></span>
+            <span class="suno-dot w-2 h-2 bg-white/50"></span>
+        </div>
+        <!-- Cancel -->
+        <button id="suno-cancel-btn" class="text-xs text-white/25 hover:text-white/55 transition-colors tracking-widest uppercase mt-2">Cancel</button>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     API KEY MODAL
+════════════════════════════════════════════════════════════════ -->
+<div id="apikey-modal" class="fixed inset-0 z-[110] flex items-center justify-center" style="opacity:0;pointer-events:none;">
+    <div id="apikey-backdrop" class="absolute inset-0" style="background:rgba(3,3,5,0.65);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);"></div>
+    <div id="apikey-card" class="relative z-10 w-full max-w-md mx-6 glass-panel rounded-3xl p-8 flex flex-col gap-6">
+        <!-- Header -->
+        <div class="flex items-start justify-between">
+            <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-full border border-white/15 bg-white/5 flex items-center justify-center">
+                        <iconify-icon icon="lucide:key-round" width="13" class="text-white/60"></iconify-icon>
+                    </div>
+                    <span class="text-white/90 font-display italic text-xl tracking-wide">Suno API Key</span>
+                </div>
+                <p class="text-[11px] text-white/30 font-light leading-relaxed mt-1">Your key is stored only in your browser and never sent to any server other than Suno.</p>
+            </div>
+            <button id="apikey-close" class="w-8 h-8 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all">
+                <iconify-icon icon="lucide:x" width="14"></iconify-icon>
+            </button>
+        </div>
+        <!-- Input -->
+        <div class="p-field">
+            <label class="p-label">API Key <span class="p-label-note">· from sunoapi.org</span></label>
+            <input id="apikey-input" type="password" placeholder="sk-..." autocomplete="off" spellcheck="false">
+        </div>
+        <!-- Info row -->
+        <div class="flex items-center gap-2 text-[10px] text-white/22 font-light">
+            <iconify-icon icon="lucide:external-link" width="11" class="flex-shrink-0"></iconify-icon>
+            <a href="https://sunoapi.org/api-key" target="_blank" class="hover:text-white/55 transition-colors">Get an API key at sunoapi.org/api-key</a>
+        </div>
+        <!-- Buttons -->
+        <div class="flex gap-3 mt-1">
+            <button id="apikey-clear-btn" class="flex-1 py-3 rounded-2xl border border-white/8 bg-transparent text-white/35 text-xs font-light hover:border-white/18 hover:text-white/65 transition-all">Clear</button>
+            <button id="apikey-save-btn" class="flex-1 py-3 rounded-2xl border border-white/20 bg-white/10 text-white text-xs font-medium hover:bg-white/18 transition-all">Save Key</button>
+        </div>
+    </div>
+</div>
 
 <!-- ═══════════════════════════════════════════════════════════════
      PROFILE MODAL
@@ -1410,6 +1534,7 @@
         clearInterval(ticker);
         ticker = null;
     }
+    window.stopTicker = stopTicker;  // expose for Suno script
 
     function setPlaying(on) {
         isPlaying = on;
@@ -1472,16 +1597,21 @@
         return e.touches ? e.touches[0].clientX : e.clientX;
     }
 
+    // Central seek function: drives sunoAudio when loaded, else fake ticker
     function scrubTo(e) {
         const rect = progressTrack.getBoundingClientRect();
         const pct  = Math.max(0, Math.min(1, (clientXFromEvent(e) - rect.left) / rect.width));
-        elapsedSec = Math.round(pct * totalSec);
-        updateProgressVisuals(elapsedSec);
+        const audio = document.getElementById('suno-audio');
+        if (audio && audio.src && isFinite(audio.duration) && audio.duration > 0) {
+            audio.currentTime = pct * audio.duration;
+        } else {
+            elapsedSec = Math.round(pct * totalSec);
+            updateProgressVisuals(elapsedSec);
+        }
     }
 
     function onDragStart(e) {
         isDragging = true;
-        // Snap thumb instantly on both click and drag start
         progressThumb.style.transition = 'opacity 0.2s ease, left 0s';
         progressTrack.classList.add('dragging');
         scrubTo(e);
@@ -1496,7 +1626,6 @@
     function onDragEnd() {
         if (!isDragging) return;
         isDragging = false;
-        // Restore smooth transition only after the seek has settled
         requestAnimationFrame(() => {
             progressThumb.style.transition = 'opacity 0.2s ease, left 0.9s linear';
         });
@@ -1512,12 +1641,14 @@
 
     // ── Progress bar hover tooltip ────────────────────────────────────────
     progressTrack.addEventListener('mousemove', e => {
-        const rect     = progressTrack.getBoundingClientRect();
-        const pct      = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-        const hoverSec = Math.round(pct * totalSec);
-        // Clamp tooltip so it never overflows the card edges
+        const audio      = document.getElementById('suno-audio');
+        const duration   = (audio && isFinite(audio.duration) && audio.duration > 0)
+                           ? audio.duration : totalSec;
+        const rect       = progressTrack.getBoundingClientRect();
+        const pct        = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        const hoverSec   = pct * duration;
         const clampedPct = Math.max(4, Math.min(96, pct * 100));
-        progressTooltipTime.textContent = fmt(hoverSec);
+        progressTooltipTime.textContent = fmt(Math.round(hoverSec));
         progressTooltip.style.left      = clampedPct + '%';
         progressTooltip.style.opacity   = '1';
     });
@@ -1718,6 +1849,443 @@
     updateEqSpeed(currentMode);   // sync EQ tempo with initial mode
     startTicker();
     document.title = '▶ Playing… · MoodTune';
+})();
+</script>
+
+<!-- ── Suno API JS ────────────────────────────────────────────── -->
+<script>
+(function () {
+    'use strict';
+
+    const SUNO_BASE  = 'https://api.sunoapi.org';
+    const LS_KEY     = 'moodtune-suno-key';
+    const POLL_MS    = 5000;
+    const MAX_WAIT   = 360000;  // 6 min — V5 can take 2–3 min in docs, extra buffer
+
+    // ── Prompt templates per mode ─────────────────────────────────────────
+    const MODE_PROMPTS = {
+        focus:   'Ambient electronic music for deep concentration, steady binaural 40Hz gamma entrainment, no vocals, minimalist texture',
+        calm:    'Gentle calming piano with soft strings, theta 6Hz entrainment, slow tempo, warm and soothing, no vocals',
+        sleep:   'Very slow ambient soundscape, deep delta 2Hz tones, soft pads, sleep induction, no percussion',
+        anxious: 'Soothing alpha wave 10Hz ambient music, slow breathing rhythm, tension release, gentle nature sounds',
+        ground:  'Earthy acoustic ambient, Schumann resonance 7.83Hz, grounding tones, organic and natural feel',
+        energy:  'Uplifting energetic electronic, beta wave 18Hz, motivating beats, no lyrics, bright and activating',
+        trauma:  'Ultra-gentle infra-low ambient, 0.5Hz rhythm, very soft and tender, safe soundscape, minimal',
+    };
+    const VIBE_SUFFIXES = {
+        anxious:    ', grounding elements, stabilizing',
+        overwhelmed:', decompressing, open space sound',
+        creative:   ', generative flow, evolving textures',
+    };
+
+    // ── DOM refs ──────────────────────────────────────────────────────────
+    const tuneBtn        = document.getElementById('tune-btn');
+    const tuneBtnIcon    = document.getElementById('tune-icon');
+    const tuneBtnLabel   = document.getElementById('tune-label');
+    const moodInput      = document.getElementById('mood-input');
+
+    const sunoOverlay    = document.getElementById('suno-overlay');
+    const sunoStatusText = document.getElementById('suno-status-text');
+    const sunoStatusSub  = document.getElementById('suno-status-sub');
+    const sunoCancelBtn  = document.getElementById('suno-cancel-btn');
+
+    const apikeyModal    = document.getElementById('apikey-modal');
+    const apikeyBackdrop = document.getElementById('apikey-backdrop');
+    const apikeyClose    = document.getElementById('apikey-close');
+    const apikeyInput    = document.getElementById('apikey-input');
+    const apikeySaveBtn  = document.getElementById('apikey-save-btn');
+    const apikeyClearBtn = document.getElementById('apikey-clear-btn');
+    const apikeyOpenBtn  = document.getElementById('api-key-btn');
+    const apikeyDot      = document.getElementById('api-key-dot');
+
+    const sunoAudio      = document.getElementById('suno-audio');
+    const trackBadge     = document.getElementById('suno-track-badge');
+    const trackTitle     = document.getElementById('suno-track-title');
+
+    // Main player DOM (needed to sync real audio with ticker)
+    const playBtn        = document.getElementById('play-btn');
+    const playIcon       = document.getElementById('play-icon');
+    const record         = document.getElementById('gramophone-record');
+    const gramoCont      = document.getElementById('gramophone-container');
+    const eqBars         = document.getElementById('eq-bars');
+    const timeElapsed    = document.getElementById('time-elapsed');
+    const timeTotal      = document.getElementById('time-total');
+    const progressThumb  = document.getElementById('progress-thumb');
+
+    // ── API Key helpers ───────────────────────────────────────────────────
+    function getKey()          { return localStorage.getItem(LS_KEY) || ''; }
+    function setKey(k)         { localStorage.setItem(LS_KEY, k); }
+    function clearKey()        { localStorage.removeItem(LS_KEY); }
+    function syncKeyIndicator() {
+        const has = !!getKey();
+        apikeyDot.classList.toggle('hidden', !has);
+    }
+
+    // ── API Key Modal ─────────────────────────────────────────────────────
+    function openApiKeyModal() {
+        apikeyInput.value = getKey();
+        apikeyCard.style.animation = 'none';
+        void apikeyCard.offsetWidth;
+        apikeyCard.style.animation = 'modal-in 0.5s cubic-bezier(0.16,1,0.3,1) both';
+        apikeyModal.style.opacity        = '1';
+        apikeyModal.style.pointerEvents  = 'auto';
+        setTimeout(() => apikeyInput.focus(), 120);
+    }
+    function closeApiKeyModal() {
+        apikeyModal.style.opacity       = '0';
+        apikeyModal.style.pointerEvents = 'none';
+    }
+
+    const apikeyCard = document.getElementById('apikey-card');
+    apikeyOpenBtn.addEventListener('click', openApiKeyModal);
+    apikeyClose.addEventListener('click', closeApiKeyModal);
+    apikeyBackdrop.addEventListener('click', closeApiKeyModal);
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && apikeyModal.style.pointerEvents !== 'none') closeApiKeyModal();
+    });
+    apikeySaveBtn.addEventListener('click', () => {
+        const k = apikeyInput.value.trim();
+        if (!k) { window.showToast('Please enter an API key'); return; }
+        setKey(k);
+        syncKeyIndicator();
+        closeApiKeyModal();
+        window.showToast('API key saved');
+    });
+    apikeyClearBtn.addEventListener('click', () => {
+        apikeyInput.value = '';
+        clearKey();
+        syncKeyIndicator();
+        window.showToast('API key cleared');
+    });
+    apikeyInput.addEventListener('keydown', e => { if (e.key === 'Enter') apikeySaveBtn.click(); });
+
+    // ── Generation overlay ────────────────────────────────────────────────
+    let cancelGeneration = false;
+    let generationActive = false;
+
+    function showOverlay(text, sub) {
+        sunoStatusText.textContent = text || 'Composing your soundscape';
+        sunoStatusSub.textContent  = sub  || 'This may take 30–120 seconds';
+        sunoOverlay.style.opacity       = '1';
+        sunoOverlay.style.pointerEvents = 'auto';
+    }
+    function updateOverlay(text, sub) {
+        sunoStatusText.textContent = text;
+        if (sub) sunoStatusSub.textContent = sub;
+    }
+    function hideOverlay() {
+        sunoOverlay.style.opacity       = '0';
+        sunoOverlay.style.pointerEvents = 'none';
+    }
+
+    sunoCancelBtn.addEventListener('click', () => {
+        cancelGeneration = true;
+        generationActive = false;
+        hideOverlay();
+        resetTuneBtn();
+        window.showToast('Generation cancelled');
+    });
+
+    // ── Tune button state ─────────────────────────────────────────────────
+    function setTuneBtnLoading(on) {
+        if (on) {
+            tuneBtn.classList.add('loading');
+            tuneBtnIcon.setAttribute('icon', 'lucide:loader-2');
+            tuneBtnLabel.textContent = 'Generating…';
+        } else {
+            tuneBtn.classList.remove('loading');
+            tuneBtnIcon.setAttribute('icon', 'lucide:sparkles');
+            tuneBtnLabel.textContent = 'Tune';
+        }
+    }
+    function resetTuneBtn() { setTuneBtnLoading(false); }
+
+    // ── Build Suno prompt ─────────────────────────────────────────────────
+    function buildPrompt() {
+        // Read current mode & vibes from the DOM state
+        const modeKey   = document.querySelector('.mode-chip.text-white')?.dataset?.mode || 'focus';
+        const vibeKeys  = [...document.querySelectorAll('.vibe-chip.text-white')].map(b => b.dataset.vibe);
+        const userText  = moodInput.value.trim();
+
+        let prompt = MODE_PROMPTS[modeKey] || MODE_PROMPTS.focus;
+        vibeKeys.forEach(v => { if (VIBE_SUFFIXES[v]) prompt += VIBE_SUFFIXES[v]; });
+        if (userText) prompt = `${userText}. ${prompt}`;
+        return prompt;
+    }
+
+    // ── Suno API calls ────────────────────────────────────────────────────
+    async function apiGenerate(prompt, apiKey) {
+        // Non-custom mode: only prompt required, max 500 chars per API docs
+        const safePrompt = prompt.slice(0, 500);
+        const res = await fetch(`${SUNO_BASE}/api/v1/generate`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                customMode:   false,
+                instrumental: true,
+                prompt:       safePrompt,
+                model:        'V5',
+                callBackUrl:  'https://example.com/callback',
+            }),
+        });
+        const data = await res.json();
+        if (data.code !== 200) throw new Error(data.msg || `API error ${res.status}`);
+        return data.data.taskId;
+    }
+
+    async function apiGetTask(taskId, apiKey) {
+        const res = await fetch(
+            `${SUNO_BASE}/api/v1/generate/record-info?taskId=${encodeURIComponent(taskId)}`,
+            { headers: { 'Authorization': `Bearer ${apiKey}` } }
+        );
+        const data = await res.json();
+        if (data.code !== 200) throw new Error(data.msg || `Poll error ${res.status}`);
+        return data.data;
+    }
+
+    async function pollTask(taskId, apiKey) {
+        const start = Date.now();
+        while (Date.now() - start < MAX_WAIT) {
+            if (cancelGeneration) throw new Error('cancelled');
+            const details = await apiGetTask(taskId, apiKey);
+            const status  = details.status;
+            const elapsed = Math.round((Date.now() - start) / 1000);
+            console.log(`[Suno poll ${elapsed}s] status=${status}`, details);
+            updateOverlay(
+                statusLabel(status),
+                `${elapsed}s elapsed · V5 may take up to 3 min`
+            );
+            if (status === 'SUCCESS') return details;
+            const fatal = ['CREATE_TASK_FAILED','GENERATE_AUDIO_FAILED','SENSITIVE_WORD_ERROR','CALLBACK_EXCEPTION'];
+            if (fatal.includes(status)) {
+                console.error('[Suno] fatal status response:', JSON.stringify(details, null, 2));
+                throw new Error(`Generation failed: ${status} — ${details.errorMessage || ''}`);
+            }
+            await sleep(POLL_MS);
+        }
+        throw new Error('Timed out after 6 minutes');
+    }
+
+    function statusLabel(s) {
+        const map = {
+            PENDING:              'Queued — waiting for a free slot…',
+            TEXT_SUCCESS:         'Lyrics & style ready, rendering audio…',
+            FIRST_SUCCESS:        'First track rendered, finishing…',
+            SUCCESS:              'Done!',
+            CREATE_TASK_FAILED:   'Failed to create task',
+            GENERATE_AUDIO_FAILED:'Audio rendering failed',
+            SENSITIVE_WORD_ERROR: 'Prompt contains restricted content',
+        };
+        return map[s] || `Processing (${s})…`;
+    }
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    // ── Load generated track into player ─────────────────────────────────
+    function loadTrackIntoPlayer(trackData) {
+        // Prefer the direct MP3 download URL — it has proper duration metadata.
+        // Stream URLs are HLS/chunked and report Infinity duration in browsers.
+        const url   = trackData.audioUrl          || trackData.audio_url
+                   || trackData.sourceAudioUrl    || trackData.source_audio_url
+                   || trackData.streamAudioUrl    || trackData.stream_audio_url;
+        const title = trackData.title || 'AI Generated Track';
+        if (!url) throw new Error('No audio URL in response');
+
+        sunoAudio.src = url;
+        sunoAudio.load();
+
+        // Show badge
+        trackTitle.textContent = title;
+        trackBadge.style.opacity   = '1';
+        trackBadge.style.transform = 'translateY(0)';
+        trackBadge.style.pointerEvents = 'auto';
+
+        // Update player title to track title
+        const playerTitle = document.getElementById('player-title');
+        playerTitle.style.opacity   = '0';
+        playerTitle.style.transform = 'translateY(5px)';
+        setTimeout(() => {
+            playerTitle.textContent     = title;
+            playerTitle.style.opacity   = '1';
+            playerTitle.style.transform = 'translateY(0)';
+        }, 220);
+
+        // Wire audio events to the player UI
+        wireAudioToPlayer();
+
+        // Auto-play
+        sunoAudio.play().catch(() => {});
+    }
+
+    // ── Wire <audio> events to player UI ─────────────────────────────────
+    // Called once after a Suno track is loaded. Takes full control of the
+    // progress bar, play/pause button, skip buttons and time labels so that
+    // every interaction drives sunoAudio instead of the fake ticker.
+    let audioWired = false;
+    function wireAudioToPlayer() {
+        if (audioWired) return;
+        audioWired = true;
+
+        const eqBarEls = [...document.querySelectorAll('#eq-bars .eq-bar')];
+
+        // ── helpers ──────────────────────────────────────────────────────
+        function fmtS(sec) {
+            if (!isFinite(sec) || isNaN(sec) || sec < 0) return '--:--';
+            const s = Math.floor(sec);
+            return String(Math.floor(s / 60)).padStart(2,'0') + ':' + String(s % 60).padStart(2,'0');
+        }
+
+        function syncProgress() {
+            const d   = isFinite(sunoAudio.duration) ? sunoAudio.duration : 0;
+            const c   = sunoAudio.currentTime || 0;
+            const pct = d ? (c / d) * 100 : 0;
+            const played = d ? Math.round((c / d) * eqBarEls.length) : 0;
+            eqBarEls.forEach((bar, i) => {
+                bar.style.background = i < played
+                    ? 'linear-gradient(to top, rgba(255,255,255,0.72), rgba(255,255,255,0.24))'
+                    : 'linear-gradient(to top, rgba(255,255,255,0.18), rgba(255,255,255,0.04))';
+            });
+            progressThumb.style.left = pct + '%';
+            timeElapsed.textContent  = fmtS(c);
+        }
+
+        // ── audio events ─────────────────────────────────────────────────
+        sunoAudio.addEventListener('timeupdate', syncProgress);
+
+        // durationchange fires when the MP3 duration becomes known
+        sunoAudio.addEventListener('durationchange', () => {
+            if (isFinite(sunoAudio.duration)) {
+                timeTotal.textContent = fmtS(sunoAudio.duration);
+            }
+        });
+
+        sunoAudio.addEventListener('loadedmetadata', () => {
+            if (isFinite(sunoAudio.duration)) {
+                timeTotal.textContent = fmtS(sunoAudio.duration);
+            }
+            syncProgress();
+        });
+
+        sunoAudio.addEventListener('play', () => {
+            playIcon.setAttribute('icon', 'lucide:pause');
+            record.classList.remove('record-paused');
+            gramoCont.classList.remove('gramophone-paused');
+            eqBars.classList.remove('eq-paused');
+            document.title = '▶ Playing… · MoodTune';
+        });
+        sunoAudio.addEventListener('pause', () => {
+            playIcon.setAttribute('icon', 'lucide:play');
+            record.classList.add('record-paused');
+            gramoCont.classList.add('gramophone-paused');
+            eqBars.classList.add('eq-paused');
+            document.title = 'MoodTune - Ethereal Therapy';
+        });
+        sunoAudio.addEventListener('ended', () => {
+            playIcon.setAttribute('icon', 'lucide:play');
+            record.classList.add('record-paused');
+            eqBars.classList.add('eq-paused');
+            syncProgress();
+        });
+
+        // ── stop the fake ticker so it can't fight the real audio ────────
+        if (window.stopTicker) window.stopTicker();
+
+        // ── play / pause button ──────────────────────────────────────────
+        // Replace the original handler entirely by marking the element so
+        // the capture-phase listener below runs first and stops propagation.
+        playBtn.dataset.sunoWired = '1';
+
+        // ── skip-back: restart real audio ────────────────────────────────
+        document.getElementById('restart-btn').addEventListener('click', () => {
+            sunoAudio.currentTime = 0;
+            sunoAudio.play().catch(() => {});
+        }, true);
+
+        // ── skip-forward: +30 s ──────────────────────────────────────────
+        document.getElementById('skip-forward-btn').addEventListener('click', () => {
+            sunoAudio.currentTime = Math.min(
+                sunoAudio.currentTime + 30,
+                sunoAudio.duration || 0
+            );
+        }, true);
+
+        // ── progress bar & tooltip are now handled by the unified scrubTo ──
+        // in the original player script (which checks sunoAudio automatically).
+        // No duplicate listeners needed here.
+    }
+
+    // ── Capture-phase play button handler (active once sunoAudio is wired) ──
+    playBtn.addEventListener('click', e => {
+        if (!playBtn.dataset.sunoWired) return; // not yet wired → let original run
+        e.stopPropagation();
+        sunoAudio.paused ? sunoAudio.play() : sunoAudio.pause();
+    }, true);
+
+    // ── Main: Tune button click ───────────────────────────────────────────
+    tuneBtn.addEventListener('click', async () => {
+        const apiKey = getKey();
+        if (!apiKey) {
+            openApiKeyModal();
+            return;
+        }
+        if (generationActive) return;
+
+        const prompt = buildPrompt();
+        generationActive  = true;
+        cancelGeneration  = false;
+
+        setTuneBtnLoading(true);
+        showOverlay('Sending request to Suno…', 'Connecting to API');
+
+        try {
+            // Step 1: Submit
+            updateOverlay('Submitting composition request…', 'Building your soundscape');
+            const taskId = await apiGenerate(prompt, apiKey);
+
+            // Step 2: Poll
+            updateOverlay('Composing your soundscape…', 'This may take 30–120 seconds');
+            const result = await pollTask(taskId, apiKey);
+
+            if (cancelGeneration) return;
+
+            // Step 3: Load track
+            // Poll response wraps tracks in result.response.sunoData (camelCase)
+            // Fallback to result.data (matches callback format from docs)
+            const tracks = result.response?.sunoData || result.data || [];
+            if (tracks.length === 0) throw new Error('No tracks returned');
+
+            updateOverlay('Loading your track…', 'Almost there');
+            loadTrackIntoPlayer(tracks[0]);
+
+            hideOverlay();
+            window.showToast(`Generated: ${tracks[0].title || 'Track ready'}`);
+
+        } catch (err) {
+            if (cancelGeneration) return;
+            hideOverlay();
+            const msg = err.message || 'Unknown error';
+            if (msg.includes('401') || msg.toLowerCase().includes('unauthorized')) {
+                window.showToast('Invalid API key — please update it');
+                openApiKeyModal();
+            } else if (msg.includes('429') || msg.toLowerCase().includes('rate')) {
+                window.showToast('Rate limit reached — try again shortly');
+            } else {
+                window.showToast('Generation failed: ' + msg.slice(0, 60));
+            }
+        } finally {
+            generationActive = false;
+            resetTuneBtn();
+        }
+    });
+
+    // ── Init ──────────────────────────────────────────────────────────────
+    syncKeyIndicator();
+    // Pre-fill input if key exists
+    if (getKey()) apikeyInput.value = getKey();
+
 })();
 </script>
 

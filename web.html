@@ -618,6 +618,226 @@
         #suno-track-badge {
             transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.16,1,0.3,1);
         }
+
+        /* ── Vitals Modal ──────────────────────────────────────────────── */
+        #vitals-modal { transition: opacity 0.4s ease; }
+        #vitals-card  { animation: modal-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+        /* Metric card */
+        .v-card {
+            background: linear-gradient(160deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.015) 100%);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 1.25rem;
+            padding: 1.1rem 1.25rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.3s ease, background 0.3s ease;
+        }
+        .v-card:hover {
+            border-color: rgba(255,255,255,0.13);
+            background: linear-gradient(160deg, rgba(255,255,255,0.065) 0%, rgba(255,255,255,0.025) 100%);
+        }
+        .v-card-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.22em;
+            font-weight: 500;
+            color: rgba(255,255,255,0.28);
+        }
+        .v-card-value {
+            font-size: 1.65rem;
+            font-weight: 300;
+            color: rgba(255,255,255,0.92);
+            letter-spacing: -0.02em;
+            line-height: 1;
+            font-family: 'Outfit', sans-serif;
+        }
+        .v-card-unit {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.35);
+            font-weight: 300;
+            letter-spacing: 0.04em;
+        }
+        .v-card-sub {
+            font-size: 0.68rem;
+            font-weight: 300;
+            color: rgba(255,255,255,0.3);
+            letter-spacing: 0.03em;
+            margin-top: 0.15rem;
+        }
+        /* Status pill */
+        .v-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 500;
+            padding: 0.2rem 0.65rem;
+            border-radius: 9999px;
+            border: 1px solid;
+            margin-top: 0.3rem;
+            width: fit-content;
+        }
+        .v-status-ok    { color: rgba(134,239,172,0.85); border-color: rgba(134,239,172,0.2); background: rgba(134,239,172,0.06); }
+        .v-status-warn  { color: rgba(251,191,36,0.85);  border-color: rgba(251,191,36,0.2);  background: rgba(251,191,36,0.06);  }
+        .v-status-alert { color: rgba(252,165,165,0.85); border-color: rgba(252,165,165,0.2); background: rgba(252,165,165,0.06); }
+
+        /* Heartbeat sparkline */
+        .v-sparkline {
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 100px;
+            height: 42px;
+            opacity: 0.18;
+            pointer-events: none;
+        }
+
+        /* Stress ring */
+        .v-stress-ring {
+            position: relative;
+            width: 72px;
+            height: 72px;
+            flex-shrink: 0;
+        }
+        .v-stress-ring svg { transform: rotate(-90deg); }
+        .v-stress-ring .ring-track { stroke: rgba(255,255,255,0.07); }
+        .v-stress-ring .ring-fill  {
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s cubic-bezier(0.16,1,0.3,1);
+        }
+        .v-stress-center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* HRV mini bar chart */
+        .v-hrv-bar {
+            flex: 1;
+            border-radius: 2px 2px 0 0;
+            background: linear-gradient(to top, rgba(255,255,255,0.25), rgba(255,255,255,0.06));
+            transform-origin: bottom;
+            animation: v-bar-grow 0.7s cubic-bezier(0.16,1,0.3,1) both;
+        }
+        @keyframes v-bar-grow {
+            from { transform: scaleY(0); }
+            to   { transform: scaleY(1); }
+        }
+
+        /* Heartbeat line animation on HR card */
+        @keyframes v-ecg {
+            0%   { stroke-dashoffset: 200; }
+            100% { stroke-dashoffset: 0;   }
+        }
+        .v-ecg-path {
+            stroke-dasharray: 200;
+            stroke-dashoffset: 200;
+            animation: v-ecg 1.8s ease-in-out infinite;
+        }
+
+        /* Live dot pulse on the card */
+        @keyframes v-pulse-dot {
+            0%, 100% { transform: scale(1);   opacity: 0.6; }
+            50%       { transform: scale(1.5); opacity: 1;   }
+        }
+        .v-live-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #f87171;
+            animation: v-pulse-dot 1.4s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        /* Vitals modal scrollbar */
+        #vitals-scroll::-webkit-scrollbar { width: 0; }
+
+        /* Source chip */
+        .v-source {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: rgba(255,255,255,0.22);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 9999px;
+            padding: 0.28rem 0.75rem;
+            font-weight: 500;
+        }
+
+        /* ── Demo Cases Bar ────────────────────────────────────────────── */
+        @keyframes case-bar-in {
+            from { opacity: 0; transform: translateY(-10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        #demo-cases-bar {
+            animation: case-bar-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+        }
+        .demo-case-btn {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.2rem;
+            padding: 0.6rem 1.1rem;
+            border-radius: 1.2rem;
+            border: 1px solid rgba(255,255,255,0.07);
+            background: transparent;
+            color: rgba(255,255,255,0.45);
+            cursor: pointer;
+            transition: all 0.28s ease;
+            white-space: nowrap;
+            font-family: 'Outfit', sans-serif;
+            text-align: left;
+        }
+        .demo-case-btn:hover {
+            border-color: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.85);
+        }
+        .demo-case-btn.case-active {
+            border-color: rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+            box-shadow: 0 0 18px rgba(255,255,255,0.05);
+        }
+        .demo-case-btn .case-id {
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            opacity: 0.5;
+            font-weight: 500;
+        }
+        .demo-case-btn .case-name {
+            font-size: 0.78rem;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+        .demo-case-btn .case-tag {
+            font-size: 0.62rem;
+            font-weight: 300;
+            opacity: 0.45;
+            letter-spacing: 0.03em;
+        }
+        .demo-case-btn.case-active .case-tag {
+            opacity: 0.6;
+        }
+        #demo-cases-scroll {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding-bottom: 2px;
+        }
+        #demo-cases-scroll::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="antialiased selection:bg-white/20 selection:text-white overflow-hidden flex flex-col h-screen">
@@ -642,6 +862,11 @@
                 <span class="text-xl font-medium tracking-wide text-white/90 font-display italic">MoodTune</span>
             </a>
             <div class="flex items-center gap-3">
+                <button id="vitals-btn" class="text-xs font-light px-5 py-2.5 rounded-full border transition-all duration-300 bg-transparent border-white/10 text-white/50 hover:border-white/30 hover:text-white flex items-center gap-2 group">
+                    <iconify-icon icon="lucide:activity" width="13"></iconify-icon>
+                    <span id="vitals-btn-label">Vitals</span>
+                    <span id="vitals-live-dot" class="hidden w-1.5 h-1.5 rounded-full bg-rose-400/70 animate-pulse transition-all"></span>
+                </button>
                 <button id="profile-btn" class="text-xs font-light px-5 py-2.5 rounded-full border transition-all duration-300 bg-transparent border-white/10 text-white/50 hover:border-white/30 hover:text-white flex items-center gap-2 group">
                     <iconify-icon icon="lucide:user-round" width="13"></iconify-icon>
                     <span id="profile-btn-label">My Profile</span>
@@ -662,7 +887,43 @@
 
     <!-- Main Content -->
     <main class="flex-1 overflow-y-auto w-full relative z-10 flex flex-col items-center pt-32 pb-48 px-6">
-        
+
+        <!-- Demo Cases Bar -->
+        <div id="demo-cases-bar" class="w-full max-w-2xl mb-8 flex flex-col gap-2">
+            <div class="flex items-center gap-3 mb-1">
+                <span class="text-[10px] text-white/25 uppercase tracking-[0.28em] font-medium">Demo Cases</span>
+                <div class="flex-1 h-px bg-white/[0.04]"></div>
+                <span class="text-[10px] text-white/18 font-light tracking-wide">Click to load a patient profile</span>
+            </div>
+            <div id="demo-cases-scroll">
+                <button class="demo-case-btn" data-case="case_001">
+                    <span class="case-id">Case 001</span>
+                    <span class="case-name">Xiao Wang</span>
+                    <span class="case-tag">28 · Work Anxiety</span>
+                </button>
+                <button class="demo-case-btn" data-case="case_002">
+                    <span class="case-id">Case 002</span>
+                    <span class="case-name">Lao Li</span>
+                    <span class="case-tag">62 · Insomnia</span>
+                </button>
+                <button class="demo-case-btn" data-case="case_003">
+                    <span class="case-id">Case 003</span>
+                    <span class="case-name">Xiao Chen</span>
+                    <span class="case-tag">21 · Attention Deficit</span>
+                </button>
+                <button class="demo-case-btn" data-case="case_004">
+                    <span class="case-id">Case 004</span>
+                    <span class="case-name">Li Tongxue</span>
+                    <span class="case-tag">28 · PhD Anxiety</span>
+                </button>
+                <button class="demo-case-btn" data-case="case_005">
+                    <span class="case-id">Case 005</span>
+                    <span class="case-name">Prof. Zhang</span>
+                    <span class="case-tag">45 · Existential Anxiety</span>
+                </button>
+            </div>
+        </div>
+
         <!-- Intent Input Area -->
         <div class="w-full max-w-2xl mb-16 flex flex-col gap-6">
             <h1 class="font-display text-4xl md:text-5xl text-center mb-4 font-medium text-white/90 tracking-wide animate-stagger-1">
@@ -900,6 +1161,218 @@
         <button id="suno-cancel-btn" class="text-xs text-white/25 hover:text-white/55 transition-colors tracking-widest uppercase mt-2">Cancel</button>
     </div>
 </div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     VITALS MODAL
+════════════════════════════════════════════════════════════════ -->
+<div id="vitals-modal" class="fixed inset-0 z-[105] flex items-center justify-center" style="opacity:0;pointer-events:none;">
+    <div id="vitals-backdrop" class="absolute inset-0 bg-black/65 backdrop-blur-sm cursor-pointer"></div>
+    <div id="vitals-card" class="relative glass-panel rounded-[2.5rem] w-full max-w-2xl mx-5 flex flex-col shadow-[0_40px_80px_rgba(0,0,0,0.65)]" style="height:min(88vh,680px);border:1px solid rgba(255,255,255,0.1);">
+
+        <!-- Header -->
+        <div class="px-9 pt-9 pb-6 flex-shrink-0">
+            <div class="flex items-start justify-between">
+                <div class="flex flex-col gap-2">
+                    <div class="flex items-center gap-3">
+                        <div class="v-live-dot"></div>
+                        <span class="text-[10px] text-white/30 uppercase tracking-[0.28em] font-medium">Biometric Monitor</span>
+                    </div>
+                    <h2 id="vitals-title" class="font-display text-[2rem] text-white/90 italic tracking-wide leading-tight">No Data</h2>
+                    <div class="flex items-center gap-3 mt-0.5">
+                        <span class="v-source">
+                            <iconify-icon icon="lucide:watch" width="10"></iconify-icon>
+                            Apple Watch · HealthKit
+                        </span>
+                        <span id="vitals-timestamp" class="text-[10px] text-white/18 font-light tracking-wide"></span>
+                    </div>
+                </div>
+                <button id="vitals-close" class="mt-1 w-9 h-9 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white/45 hover:text-white hover:bg-white/10 transition-all duration-300 flex-shrink-0">
+                    <iconify-icon icon="lucide:x" width="15"></iconify-icon>
+                </button>
+            </div>
+        </div>
+
+        <!-- Scrollable content -->
+        <div id="vitals-scroll" class="flex-1 overflow-y-auto px-9 pb-8" style="-webkit-overflow-scrolling:touch;">
+
+            <!-- Empty state -->
+            <div id="vitals-empty" class="flex flex-col items-center justify-center gap-4 py-16 text-center">
+                <div class="w-14 h-14 rounded-full border border-white/10 bg-white/[0.03] flex items-center justify-center">
+                    <iconify-icon icon="lucide:activity" width="22" class="text-white/20"></iconify-icon>
+                </div>
+                <p class="text-white/25 text-sm font-light tracking-wide">Load a demo case to see biometric data</p>
+            </div>
+
+            <!-- Data grid (hidden until data loaded) -->
+            <div id="vitals-grid" class="hidden flex flex-col gap-5">
+
+                <!-- Row 1: HR + HRV + Stress (3 cols) -->
+                <div class="grid grid-cols-3 gap-3">
+
+                    <!-- Heart Rate -->
+                    <div class="v-card col-span-1">
+                        <span class="v-card-label">Heart Rate</span>
+                        <div class="flex items-end gap-1.5 mt-1">
+                            <span id="v-hr-value" class="v-card-value">—</span>
+                            <span class="v-card-unit mb-1">BPM</span>
+                        </div>
+                        <span id="v-hr-status" class="v-status"></span>
+                        <!-- ECG sparkline -->
+                        <svg class="v-sparkline" viewBox="0 0 100 42" fill="none" preserveAspectRatio="none">
+                            <path id="v-ecg-path" class="v-ecg-path" d="M0 30 L12 30 L18 30 L22 5 L26 38 L30 30 L42 30 L46 14 L50 38 L54 30 L66 30 L70 10 L74 38 L78 30 L100 30" stroke="rgba(248,113,113,0.7)" stroke-width="1.5" fill="none"/>
+                        </svg>
+                    </div>
+
+                    <!-- HRV -->
+                    <div class="v-card col-span-1">
+                        <span class="v-card-label">HRV · SDNN</span>
+                        <div class="flex items-end gap-1.5 mt-1">
+                            <span id="v-hrv-value" class="v-card-value">—</span>
+                            <span class="v-card-unit mb-1">ms</span>
+                        </div>
+                        <span id="v-hrv-status" class="v-status"></span>
+                        <!-- HRV bar chart -->
+                        <div id="v-hrv-bars" class="absolute bottom-3 right-3 flex items-end gap-[2px]" style="width:52px;height:28px;"></div>
+                    </div>
+
+                    <!-- Stress Score -->
+                    <div class="v-card col-span-1" style="flex-direction:column;">
+                        <span class="v-card-label">Stress</span>
+                        <div class="flex items-center gap-3 mt-2">
+                            <div class="v-stress-ring" style="width:58px;height:58px;flex-shrink:0;">
+                                <svg width="58" height="58" viewBox="0 0 58 58">
+                                    <circle class="ring-track" cx="29" cy="29" r="22" fill="none" stroke-width="4.5"/>
+                                    <circle id="v-stress-ring-fill" class="ring-fill" cx="29" cy="29" r="22" fill="none" stroke-width="4.5" stroke="rgba(251,191,36,0.7)" stroke-dasharray="138.2" stroke-dashoffset="138.2"/>
+                                </svg>
+                                <div class="v-stress-center">
+                                    <span id="v-stress-num" class="font-light text-white/90" style="line-height:1;font-size:1.1rem">—</span>
+                                    <span class="text-[8px] text-white/28 uppercase tracking-widest">/10</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-1 min-w-0 flex-1 overflow-hidden">
+                                <span id="v-stress-label" class="text-sm font-light text-white/60 leading-snug">—</span>
+                                <span id="v-stress-status" class="v-status" style="font-size:0.55rem;padding:0.18rem 0.5rem;white-space:nowrap;"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 2: Respiratory + SpO2 + Temp (3 cols) -->
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="v-card">
+                        <span class="v-card-label">Respiratory Rate</span>
+                        <div class="flex items-end gap-1.5 mt-1">
+                            <span id="v-rr-value" class="v-card-value">—</span>
+                            <span class="v-card-unit mb-1">br/min</span>
+                        </div>
+                        <span id="v-rr-status" class="v-status"></span>
+                        <span id="v-rr-sub" class="v-card-sub"></span>
+                    </div>
+                    <div class="v-card">
+                        <span class="v-card-label">Blood Oxygen · SpO2</span>
+                        <div class="flex items-end gap-1.5 mt-1">
+                            <span id="v-spo2-value" class="v-card-value">—</span>
+                            <span class="v-card-unit mb-1">%</span>
+                        </div>
+                        <span id="v-spo2-status" class="v-status"></span>
+                    </div>
+                    <div class="v-card">
+                        <span class="v-card-label">Wrist Temperature</span>
+                        <div class="flex items-end gap-1.5 mt-1">
+                            <span id="v-temp-value" class="v-card-value">—</span>
+                            <span class="v-card-unit mb-1">°C</span>
+                        </div>
+                        <span id="v-temp-status" class="v-status"></span>
+                    </div>
+                </div>
+
+                <!-- Row 3: Environment + Motion + Sleep (wide layout) -->
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="v-card">
+                        <span class="v-card-label">Ambient Noise</span>
+                        <div class="flex items-end gap-1.5 mt-1">
+                            <span id="v-noise-value" class="v-card-value">—</span>
+                            <span class="v-card-unit mb-1">dB</span>
+                        </div>
+                        <span id="v-noise-status" class="v-status"></span>
+                        <span id="v-noise-sub" class="v-card-sub"></span>
+                    </div>
+                    <div class="v-card">
+                        <span class="v-card-label">Body Motion</span>
+                        <div class="flex flex-col gap-1.5 mt-2">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[9px] text-white/28 font-mono w-3">X</span>
+                                <div class="flex-1 h-1 rounded-full bg-white/6 overflow-hidden">
+                                    <div id="v-motion-x" class="h-full rounded-full bg-white/35 transition-all duration-700" style="width:0%"></div>
+                                </div>
+                                <span id="v-motion-x-val" class="text-[9px] font-mono text-white/30 w-7 text-right">—</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[9px] text-white/28 font-mono w-3">Y</span>
+                                <div class="flex-1 h-1 rounded-full bg-white/6 overflow-hidden">
+                                    <div id="v-motion-y" class="h-full rounded-full bg-white/35 transition-all duration-700" style="width:0%"></div>
+                                </div>
+                                <span id="v-motion-y-val" class="text-[9px] font-mono text-white/30 w-7 text-right">—</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[9px] text-white/28 font-mono w-3">Z</span>
+                                <div class="flex-1 h-1 rounded-full bg-white/6 overflow-hidden">
+                                    <div id="v-motion-z" class="h-full rounded-full bg-white/35 transition-all duration-700" style="width:0%"></div>
+                                </div>
+                                <span id="v-motion-z-val" class="text-[9px] font-mono text-white/30 w-7 text-right">—</span>
+                            </div>
+                        </div>
+                        <span id="v-motion-status" class="v-status mt-2"></span>
+                    </div>
+                    <div class="v-card">
+                        <span class="v-card-label">Sleep Stage</span>
+                        <div class="flex items-end gap-1.5 mt-1">
+                            <span id="v-sleep-value" class="v-card-value text-2xl">—</span>
+                        </div>
+                        <span id="v-sleep-status" class="v-status"></span>
+                        <span id="v-sleep-sub" class="v-card-sub"></span>
+                    </div>
+                </div>
+
+                <!-- Row 4: Middleware analysis output -->
+                <div class="v-card" style="border-color:rgba(255,255,255,0.09);">
+                    <div class="flex items-center gap-3 mb-3">
+                        <iconify-icon icon="lucide:cpu" width="13" class="text-white/30 flex-shrink-0"></iconify-icon>
+                        <span class="v-card-label" style="margin:0">Middleware Analysis · Layer 2 Output</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-x-6 gap-y-2">
+                        <div class="flex items-center justify-between border-b border-white/[0.04] pb-2">
+                            <span class="text-[10px] text-white/30 font-light">Target Entrainment BPM</span>
+                            <span id="v-target-bpm" class="text-[11px] font-mono text-white/65">—</span>
+                        </div>
+                        <div class="flex items-center justify-between border-b border-white/[0.04] pb-2">
+                            <span class="text-[10px] text-white/30 font-light">Sympathetic Load</span>
+                            <span id="v-sympathetic" class="text-[11px] font-mono text-white/65">—</span>
+                        </div>
+                        <div class="flex items-center justify-between border-b border-white/[0.04] pb-2">
+                            <span class="text-[10px] text-white/30 font-light">HRV Status</span>
+                            <span id="v-hrv-analysis" class="text-[11px] font-mono text-white/65">—</span>
+                        </div>
+                        <div class="flex items-center justify-between border-b border-white/[0.04] pb-2">
+                            <span class="text-[10px] text-white/30 font-light">Acoustic Texture</span>
+                            <span id="v-texture" class="text-[11px] font-mono text-white/65">—</span>
+                        </div>
+                        <div class="flex items-center justify-between pb-1">
+                            <span class="text-[10px] text-white/30 font-light">Instrument Set</span>
+                            <span id="v-instruments" class="text-[11px] font-mono text-white/65">—</span>
+                        </div>
+                        <div class="flex items-center justify-between pb-1">
+                            <span class="text-[10px] text-white/30 font-light">Noise Safeguard</span>
+                            <span id="v-safeguard" class="text-[11px] font-mono text-white/65">—</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /vitals-grid -->
+        </div><!-- /scroll -->
+    </div><!-- /card -->
+</div><!-- /modal -->
+
 
 <!-- ═══════════════════════════════════════════════════════════════
      API KEY MODAL
@@ -2570,6 +3043,790 @@
     // ── Init ──────────────────────────────────────────────────────────
     loadProfile();
     goTo(0);
+
+})();
+</script>
+<!-- ── Demo Cases JS ──────────────────────────────────────────── -->
+<script>
+(function () {
+    'use strict';
+
+    // ── Case Data ─────────────────────────────────────────────────────────
+    const DEMO_CASES = {
+        case_001: {
+            // Profile data
+            profile: {
+                name:          'Xiao Wang',
+                age:           '28',
+                gender:        'male',
+                contact:       'xiaowang@example.com',
+                hearing:       'normal',
+                conditions:    ['none'],
+                medication:    'no',
+                sleep:         5,
+                medsNote:      '',
+                emotions:      ['anxious', 'stressed'],
+                goals:         ['relax', 'emotion-reg'],
+                fluctuation:   ['night'],
+                styles:        ['jazz', 'ambient', 'instrumental'],
+                sensitive:     'No sharp attacks, no heavy drums',
+                rhythm:        2,
+                volume:        'moderate',
+                prevTherapy:   'no',
+                therapyTypes:  [],
+                sessions:      '0',
+                effectiveness: 'na',
+                notes:         'Software engineer, intense post-work brain tension. Heart Rate 85, HRV 38, Stress 8/10.',
+            },
+            // Main input area
+            moodInput:   'anxious after work, brain tension, need to decompress',
+            mode:        'anxious',
+            vibes:       ['anxious'],
+            // Suno prompt
+            sunoPrompt:  'Instrumental, Neo-Soul groove, 70 BPM, warm analog synthesizer and deep smooth bass, lo-fi hip hop beat with vinyl crackle, urban night rain atmosphere, relaxing jazzy chords, no lead vocal',
+            // Cached music info shown in player
+            cachedTrack: {
+                title:    'Midnight Window Seat',
+                subtext:  'Alpha · 10Hz',
+                mode:     'anxious',
+                audioUrl: 'https://tempfile.aiquickdraw.com/r/1e1d9961d49240c59c151e488200962e.mp3',
+            },
+            // Apple Watch biometric snapshot (from case.md + system defaults)
+            vitals: {
+                heartRate:          85,
+                hrv:                38,
+                respiratoryRate:    18,
+                bloodOxygen:        97.5,
+                wristTemperature:   36.6,
+                ambientNoise:       62,
+                bodyMotion:         { x: 0.28, y: 0.22, z: 0.14 },
+                sleepStage:         'awake',
+                stressScore:        8,
+                baselineHR:         65,
+            },
+        },
+        case_002: {
+            profile: {
+                name:          'Lao Li',
+                age:           '62',
+                gender:        'female',
+                contact:       'laoli@example.com',
+                hearing:       'mild',
+                conditions:    ['none'],
+                medication:    'yes',
+                sleep:         3,
+                medsNote:      'Sleep aid medication, mild auditory sensitivity',
+                emotions:      ['fatigued', 'anxious'],
+                goals:         ['sleep', 'relax'],
+                fluctuation:   ['night'],
+                styles:        ['classical', 'ambient', 'instrumental'],
+                sensitive:     'No drums, no sharp attacks, no sudden loud sounds',
+                rhythm:        1,
+                volume:        'soft',
+                prevTherapy:   'yes',
+                therapyTypes:  ['meditation'],
+                sessions:      '1-5',
+                effectiveness: 'fair',
+                notes:         'Retiree, sleep disorder and insomnia. Heart Rate 72, HRV 35, Stress 5/10. Highly sensitive to sound.',
+            },
+            moodInput:   'can\'t sleep, insomnia, need something very soft and peaceful',
+            mode:        'sleep',
+            vibes:       [],
+            sunoPrompt:  'Instrumental, ambient classical, 50 BPM, soft cello legato and warm flute, continuous sustained notes and pure acoustic resonance, highly peaceful and sleep inducing, absolutely no drums and no sharp attacks',
+            cachedTrack: {
+                title:    'Moonlight Between Breaths',
+                subtext:  'Delta · 2Hz',
+                mode:     'sleep',
+                audioUrl: 'https://tempfile.aiquickdraw.com/r/4465c092af244f448590c2714f68ae07.mp3',
+            },
+            vitals: {
+                heartRate:          72,
+                hrv:                35,
+                respiratoryRate:    14,
+                bloodOxygen:        96.8,
+                wristTemperature:   36.2,
+                ambientNoise:       38,
+                bodyMotion:         { x: 0.05, y: 0.04, z: 0.03 },
+                sleepStage:         'core',
+                stressScore:        5,
+                baselineHR:         68,
+            },
+        },
+        case_003: {
+            profile: {
+                name:          'Xiao Chen',
+                age:           '21',
+                gender:        'male',
+                contact:       'xiaochen@university.edu',
+                hearing:       'normal',
+                conditions:    ['none'],
+                medication:    'no',
+                sleep:         6,
+                medsNote:      '',
+                emotions:      ['stressed', 'fatigued'],
+                goals:         ['focus', 'emotion-reg'],
+                fluctuation:   ['afternoon'],
+                styles:        ['electronic', 'binaural', 'ambient'],
+                sensitive:     '',
+                rhythm:        3,
+                volume:        'moderate',
+                prevTherapy:   'no',
+                therapyTypes:  [],
+                sessions:      '0',
+                effectiveness: 'na',
+                notes:         'College student, attention deficit and frequent phone checking during study. Heart Rate 78, HRV 42, Stress 7/10.',
+            },
+            moodInput:   'can\'t focus, distracted, keep checking phone, need deep concentration',
+            mode:        'focus',
+            vibes:       ['creative'],
+            sunoPrompt:  'Instrumental, minimal IDM, 90 BPM, crisp clean electronic texture, steady repetitive pulse with binaural ambient, focused energy and pure concentration, no distracting melodies',
+            cachedTrack: {
+                title:    'Pure Function',
+                subtext:  'Binaural · 40Hz',
+                mode:     'focus',
+                audioUrl: 'https://tempfile.aiquickdraw.com/r/9cba48be9cc340a5996246d76041ff70.mp3',
+            },
+            vitals: {
+                heartRate:          78,
+                hrv:                42,
+                respiratoryRate:    16,
+                bloodOxygen:        98.2,
+                wristTemperature:   36.4,
+                ambientNoise:       55,
+                bodyMotion:         { x: 0.18, y: 0.14, z: 0.20 },
+                sleepStage:         'awake',
+                stressScore:        7,
+                baselineHR:         62,
+            },
+        },
+        case_004: {
+            profile: {
+                name:          'Li Tongxue',
+                age:           '28',
+                gender:        'male',
+                contact:       'litongxue@phd.edu',
+                hearing:       'normal',
+                conditions:    ['anxiety-d'],
+                medication:    'no',
+                sleep:         4,
+                medsNote:      'Occasional insomnia from thesis stress',
+                emotions:      ['anxious', 'stressed', 'fatigued'],
+                goals:         ['relax', 'emotion-reg', 'sleep'],
+                fluctuation:   ['night'],
+                styles:        ['ambient', 'instrumental', 'meditation'],
+                sensitive:     'No upbeat or energetic elements',
+                rhythm:        1,
+                volume:        'moderate',
+                prevTherapy:   'no',
+                therapyTypes:  [],
+                sessions:      '0',
+                effectiveness: 'na',
+                notes:         'PhD student, thesis anxiety and late night lab sessions. Heart Rate 82-88, HRV 38, Stress 9/10.',
+            },
+            moodInput:   'PhD thesis stress, late night anxiety, overwhelmed and exhausted',
+            mode:        'anxious',
+            vibes:       ['anxious', 'overwhelmed'],
+            sunoPrompt:  'Instrumental, Neo-Soul meditation, 65 BPM, warm analog synth with soft humming textures, gentle lo-fi groove, supportive and encouraging mood, reduce PhD anxiety, academic stress relief, peaceful lab night atmosphere, no vocals',
+            cachedTrack: {
+                title:    'Night Shift in Soft Gold',
+                subtext:  'Alpha · 10Hz',
+                mode:     'anxious',
+                audioUrl: 'https://tempfile.aiquickdraw.com/r/9dec1ae3b4ef443e9f7d556c8e5872ee.mp3',
+            },
+            vitals: {
+                heartRate:          85,
+                hrv:                38,
+                respiratoryRate:    19,
+                bloodOxygen:        97.0,
+                wristTemperature:   36.7,
+                ambientNoise:       45,
+                bodyMotion:         { x: 0.12, y: 0.09, z: 0.08 },
+                sleepStage:         'awake',
+                stressScore:        9,
+                baselineHR:         64,
+            },
+        },
+        case_005: {
+            profile: {
+                name:          'Prof. Zhang',
+                age:           '45',
+                gender:        'male',
+                contact:       'zhang@university.edu',
+                hearing:       'normal',
+                conditions:    ['none'],
+                medication:    'no',
+                sleep:         6,
+                medsNote:      '',
+                emotions:      ['anxious', 'stressed', 'numb'],
+                goals:         ['relax', 'emotion-reg'],
+                fluctuation:   ['night'],
+                styles:        ['classical', 'ambient', 'instrumental'],
+                sensitive:     '',
+                rhythm:        2,
+                volume:        'moderate',
+                prevTherapy:   'yes',
+                therapyTypes:  ['counseling', 'meditation'],
+                sessions:      '6-20',
+                effectiveness: 'good',
+                notes:         'Professor, research and teaching dual pressure with existential anxiety. Heart Rate 78, HRV 40, Stress 7/10.',
+            },
+            moodInput:   'existential anxiety, dual pressure from research and teaching, need reflection',
+            mode:        'calm',
+            vibes:       ['anxious'],
+            sunoPrompt:  'Instrumental, cinematic memoir, 55 BPM, warm piano with soft strings, nostalgic orchestral ambient, bittersweet reflection, middle-aged wisdom, reduce tenure anxiety, accept life complexity, gentle catharsis, hopeful resolution',
+            cachedTrack: {
+                title:    'Autumn Tenure',
+                subtext:  'Theta · 6Hz',
+                mode:     'calm',
+                audioUrl: 'https://tempfile.aiquickdraw.com/r/3e42b09a8be5433c8365edb712ba68cf.mp3',
+            },
+            vitals: {
+                heartRate:          78,
+                hrv:                40,
+                respiratoryRate:    15,
+                bloodOxygen:        98.0,
+                wristTemperature:   36.5,
+                ambientNoise:       48,
+                bodyMotion:         { x: 0.08, y: 0.06, z: 0.05 },
+                sleepStage:         'awake',
+                stressScore:        7,
+                baselineHR:         70,
+            },
+        },
+    };
+
+    // ── Helpers ───────────────────────────────────────────────────────────
+    let activeCaseId = null;
+
+    // Set a chip's active state (main mode/vibe chips in the input area)
+    function setMainChip(selector, active) {
+        const el = document.querySelector(selector);
+        if (!el) return;
+        const ON  = ['border-white/20', 'bg-white/10', 'text-white', 'shadow-[0_0_15px_rgba(255,255,255,0.05)]'];
+        const OFF = ['border-white/5', 'bg-transparent', 'text-white/50', 'hover:border-white/20', 'hover:text-white'];
+        if (active) {
+            OFF.forEach(c => el.classList.remove(c));
+            ON.forEach(c  => el.classList.add(c));
+        } else {
+            ON.forEach(c  => el.classList.remove(c));
+            OFF.forEach(c => el.classList.add(c));
+        }
+    }
+
+    // Programmatically activate a mode chip and update the player
+    function activateMode(modeKey) {
+        document.querySelectorAll('.mode-chip').forEach(b => {
+            setMainChip(`.mode-chip[data-mode="${b.dataset.mode}"]`, b.dataset.mode === modeKey);
+        });
+        // Trigger click to let the original JS handle state updates
+        const modeBtn = document.querySelector(`.mode-chip[data-mode="${modeKey}"]`);
+        if (modeBtn) modeBtn.click();
+    }
+
+    // Activate vibe chips
+    function activateVibes(vibeKeys) {
+        // First deselect all
+        document.querySelectorAll('.vibe-chip').forEach(b => {
+            setMainChip(`.vibe-chip[data-vibe="${b.dataset.vibe}"]`, false);
+        });
+        // Then click each desired vibe to trigger original state
+        vibeKeys.forEach(v => {
+            const btn = document.querySelector(`.vibe-chip[data-vibe="${v}"]`);
+            if (btn) btn.click();
+        });
+    }
+
+    // Fill the profile modal with case data
+    function fillProfile(p) {
+        // Text inputs
+        const set = (id, val) => {
+            const el = document.getElementById(id);
+            if (el && val !== undefined) el.value = val;
+        };
+        set('p-name',     p.name);
+        set('p-age',      p.age);
+        set('p-contact',  p.contact);
+        set('p-meds-note',p.medsNote);
+        set('p-sensitive',p.sensitive);
+        set('p-notes',    p.notes);
+
+        // Sleep slider
+        const sleepSlider = document.getElementById('p-sleep');
+        const sleepDisp   = document.getElementById('p-sleep-disp');
+        if (sleepSlider && p.sleep !== undefined) {
+            sleepSlider.value = p.sleep;
+            if (sleepDisp) sleepDisp.textContent = p.sleep + ' / 10';
+        }
+
+        // Rhythm slider
+        const rhythmSlider = document.getElementById('p-rhythm');
+        const rhythmDisp   = document.getElementById('p-rhythm-disp');
+        const RHYTHM_LABELS = { 1:'Slow & Soothing', 2:'Mostly Slow', 3:'Balanced', 4:'Mostly Fast', 5:'Fast & Activating' };
+        if (rhythmSlider && p.rhythm !== undefined) {
+            rhythmSlider.value = p.rhythm;
+            if (rhythmDisp) rhythmDisp.textContent = RHYTHM_LABELS[p.rhythm] || 'Balanced';
+        }
+
+        // All p-chips: first deactivate all, then activate per case
+        document.querySelectorAll('.p-chip').forEach(btn => btn.classList.remove('p-active'));
+
+        // Single-select groups
+        const singleMap = {
+            gender:        p.gender,
+            hearing:       p.hearing,
+            medication:    p.medication,
+            volume:        p.volume,
+            prevTherapy:   p.prevTherapy,
+            sessions:      p.sessions,
+            effectiveness: p.effectiveness,
+        };
+        Object.entries(singleMap).forEach(([group, val]) => {
+            if (!val) return;
+            const btn = document.querySelector(`.p-chip[data-group="${group}"][data-val="${val}"]`);
+            if (btn) btn.classList.add('p-active');
+        });
+
+        // Multi-select groups
+        const multiMap = {
+            conditions:   p.conditions   || [],
+            emotions:     p.emotions     || [],
+            goals:        p.goals        || [],
+            fluctuation:  p.fluctuation  || [],
+            styles:       p.styles       || [],
+            therapyTypes: p.therapyTypes || [],
+        };
+        Object.entries(multiMap).forEach(([group, vals]) => {
+            vals.forEach(v => {
+                const btn = document.querySelector(`.p-chip[data-group="${group}"][data-val="${v}"]`);
+                if (btn) btn.classList.add('p-active');
+            });
+        });
+
+        // Persist to localStorage so the profile modal shows correctly on open
+        try {
+            const existing = JSON.parse(localStorage.getItem('moodtune-profile') || '{}');
+            const merged = Object.assign({}, existing, {
+                name:          p.name,
+                age:           p.age,
+                gender:        p.gender,
+                contact:       p.contact,
+                hearing:       p.hearing,
+                conditions:    p.conditions  || [],
+                medication:    p.medication,
+                sleep:         p.sleep,
+                medsNote:      p.medsNote,
+                emotions:      p.emotions    || [],
+                goals:         p.goals       || [],
+                fluctuation:   p.fluctuation || [],
+                styles:        p.styles      || [],
+                sensitive:     p.sensitive,
+                rhythm:        p.rhythm,
+                volume:        p.volume,
+                prevTherapy:   p.prevTherapy,
+                therapyTypes:  p.therapyTypes|| [],
+                sessions:      p.sessions,
+                effectiveness: p.effectiveness,
+                notes:         p.notes,
+                savedAt:       new Date().toISOString(),
+            });
+            localStorage.setItem('moodtune-profile', JSON.stringify(merged));
+        } catch (_) {}
+
+        // Update the profile button label
+        const btnLabel   = document.getElementById('profile-btn-label');
+        const savedDot   = document.getElementById('profile-saved-dot');
+        if (btnLabel && p.name) btnLabel.textContent = p.name;
+        if (savedDot) savedDot.classList.remove('hidden');
+    }
+
+    // Load cached track audio into the player and start playback
+    function showCachedTrack(track) {
+        const sunoAudio   = document.getElementById('suno-audio');
+        const playerTitle = document.getElementById('player-title');
+        const trackBadge  = document.getElementById('suno-track-badge');
+        const trackTitleEl= document.getElementById('suno-track-title');
+
+        // Update player title with cross-fade
+        if (playerTitle) {
+            playerTitle.style.opacity   = '0';
+            playerTitle.style.transform = 'translateY(5px)';
+            setTimeout(() => {
+                playerTitle.textContent     = track.title;
+                playerTitle.style.opacity   = '1';
+                playerTitle.style.transform = 'translateY(0)';
+            }, 220);
+        }
+
+        // Show badge
+        if (trackBadge && trackTitleEl) {
+            trackTitleEl.textContent       = 'Demo · Cached Track';
+            trackBadge.style.opacity       = '1';
+            trackBadge.style.transform     = 'translateY(0)';
+            trackBadge.style.pointerEvents = 'auto';
+        }
+
+        // Load real audio if URL available
+        if (track.audioUrl && sunoAudio) {
+            // Reset previous audio state cleanly
+            sunoAudio.pause();
+            sunoAudio.src = track.audioUrl;
+            sunoAudio.load();
+
+            // The Suno JS block exposes wireAudioToPlayer after the first
+            // track loads. On subsequent case switches we re-wire as needed.
+            // Use the same loadTrackIntoPlayer pathway if it's already wired,
+            // otherwise manually wire and play.
+            if (sunoAudio._caseWired) {
+                // Already wired — wait for new src to be ready then play from start
+                sunoAudio.addEventListener('canplay', function onSwitch() {
+                    sunoAudio.removeEventListener('canplay', onSwitch);
+                    sunoAudio.currentTime = 0;
+                    sunoAudio.play().catch(() => {});
+                }, { once: true });
+            } else {
+                // First load: trigger the same flow as a Suno generation result
+                // by dispatching to loadTrackIntoPlayer if available, else wire manually.
+                sunoAudio.addEventListener('canplay', function onCanPlay() {
+                    sunoAudio.removeEventListener('canplay', onCanPlay);
+                    sunoAudio.play().catch(() => {});
+                }, { once: true });
+
+                // Mark as wired so play-btn capture handler activates
+                const playBtn = document.getElementById('play-btn');
+                if (playBtn) playBtn.dataset.sunoWired = '1';
+                sunoAudio._caseWired = true;
+
+                // Wire timeupdate → progress bar, duration → time total
+                const eqBarEls    = [...document.querySelectorAll('#eq-bars .eq-bar')];
+                const timeElapsed = document.getElementById('time-elapsed');
+                const timeTotal   = document.getElementById('time-total');
+                const progressThumb = document.getElementById('progress-thumb');
+                const record      = document.getElementById('gramophone-record');
+                const gramoCont   = document.getElementById('gramophone-container');
+                const eqBarsEl    = document.getElementById('eq-bars');
+                const playIcon    = document.getElementById('play-icon');
+
+                function fmtS(s) {
+                    if (!isFinite(s) || isNaN(s) || s < 0) return '--:--';
+                    const n = Math.floor(s);
+                    return String(Math.floor(n / 60)).padStart(2,'0') + ':' + String(n % 60).padStart(2,'0');
+                }
+                function syncProg() {
+                    const d = isFinite(sunoAudio.duration) ? sunoAudio.duration : 0;
+                    const c = sunoAudio.currentTime || 0;
+                    const pct = d ? (c / d) * 100 : 0;
+                    const played = d ? Math.round((c / d) * eqBarEls.length) : 0;
+                    eqBarEls.forEach((bar, i) => {
+                        bar.style.background = i < played
+                            ? 'linear-gradient(to top, rgba(255,255,255,0.72), rgba(255,255,255,0.24))'
+                            : 'linear-gradient(to top, rgba(255,255,255,0.18), rgba(255,255,255,0.04))';
+                    });
+                    if (progressThumb) progressThumb.style.left = pct + '%';
+                    if (timeElapsed) timeElapsed.textContent = fmtS(c);
+                }
+
+                sunoAudio.addEventListener('timeupdate', syncProg);
+                sunoAudio.addEventListener('durationchange', () => {
+                    if (isFinite(sunoAudio.duration) && timeTotal)
+                        timeTotal.textContent = fmtS(sunoAudio.duration);
+                });
+                sunoAudio.addEventListener('play', () => {
+                    if (playIcon) playIcon.setAttribute('icon', 'lucide:pause');
+                    if (record) record.classList.remove('record-paused');
+                    if (gramoCont) gramoCont.classList.remove('gramophone-paused');
+                    if (eqBarsEl) eqBarsEl.classList.remove('eq-paused');
+                    document.title = '▶ Playing… · MoodTune';
+                });
+                sunoAudio.addEventListener('pause', () => {
+                    if (playIcon) playIcon.setAttribute('icon', 'lucide:play');
+                    if (record) record.classList.add('record-paused');
+                    if (gramoCont) gramoCont.classList.add('gramophone-paused');
+                    if (eqBarsEl) eqBarsEl.classList.add('eq-paused');
+                    document.title = 'MoodTune - Ethereal Therapy';
+                });
+                sunoAudio.addEventListener('ended', () => {
+                    if (playIcon) playIcon.setAttribute('icon', 'lucide:play');
+                    if (record) record.classList.add('record-paused');
+                    if (eqBarsEl) eqBarsEl.classList.add('eq-paused');
+                    syncProg();
+                });
+
+                // Stop the fake ticker
+                if (window.stopTicker) window.stopTicker();
+
+                // skip-back / skip-forward for real audio (capture phase)
+                document.getElementById('restart-btn').addEventListener('click', () => {
+                    sunoAudio.currentTime = 0;
+                    sunoAudio.play().catch(() => {});
+                }, true);
+                document.getElementById('skip-forward-btn').addEventListener('click', () => {
+                    sunoAudio.currentTime = Math.min(sunoAudio.currentTime + 30, sunoAudio.duration || 0);
+                }, true);
+            }
+        }
+    }
+
+    // ── Main: load a case ─────────────────────────────────────────────────
+    function loadCase(caseId) {
+        const c = DEMO_CASES[caseId];
+        if (!c) return;
+
+        activeCaseId = caseId;
+
+        // 1. Highlight active case button
+        document.querySelectorAll('.demo-case-btn').forEach(btn => {
+            btn.classList.toggle('case-active', btn.dataset.case === caseId);
+        });
+
+        // 2. Fill mood input
+        const moodInput = document.getElementById('mood-input');
+        if (moodInput) moodInput.value = c.moodInput;
+
+        // 3. Activate mode & vibes (will also update player card via original JS)
+        activateMode(c.mode);
+        activateVibes(c.vibes);
+
+        // 4. Fill profile (in background — modal doesn't need to be open)
+        fillProfile(c.profile);
+
+        // 5. Show cached track in player
+        showCachedTrack(c.cachedTrack);
+
+        // 6. Update vitals monitor (silently — modal stays closed)
+        if (c.vitals) window.loadVitals(c.profile.name, c.vitals);
+
+        // 7. Toast
+        if (window.showToast) window.showToast(`Loaded: ${c.profile.name} — ${caseId.replace('_','')}`);
+    }
+
+    // ── Bind click handlers ───────────────────────────────────────────────
+    document.querySelectorAll('.demo-case-btn').forEach(btn => {
+        btn.addEventListener('click', () => loadCase(btn.dataset.case));
+    });
+
+})();
+</script>
+
+<!-- ── Vitals Modal JS ────────────────────────────────────────── -->
+<script>
+(function () {
+    'use strict';
+
+    // ── DOM ───────────────────────────────────────────────────────────────
+    const modal    = document.getElementById('vitals-modal');
+    const backdrop = document.getElementById('vitals-backdrop');
+    const card     = document.getElementById('vitals-card');
+    const openBtn  = document.getElementById('vitals-btn');
+    const closeBtn = document.getElementById('vitals-close');
+    const liveDot  = document.getElementById('vitals-live-dot');
+    const emptyEl  = document.getElementById('vitals-empty');
+    const gridEl   = document.getElementById('vitals-grid');
+
+    // ── Open / Close ──────────────────────────────────────────────────────
+    function openModal() {
+        card.style.animation = 'none';
+        void card.offsetWidth;
+        card.style.animation = 'modal-in 0.5s cubic-bezier(0.16,1,0.3,1) both';
+        modal.style.opacity = '1';
+        modal.style.pointerEvents = 'auto';
+    }
+    function closeModal() {
+        modal.style.opacity = '0';
+        modal.style.pointerEvents = 'none';
+    }
+
+    openBtn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', closeModal);
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && modal.style.pointerEvents !== 'none') closeModal();
+    });
+
+    // ── Middleware Layer 2 calculations (mirroring Python logic) ──────────
+    function computeMiddleware(v) {
+        const targetBpm       = Math.max(45, Math.round(v.heartRate * 0.85));
+        const sympatheticLoad = v.heartRate - v.baselineHR;
+        const hrvStressed     = v.hrv < 40;
+        const respElevated    = v.respiratoryRate > 18;
+        const noiseThreat     = v.ambientNoise > 70;
+
+        return {
+            targetBpm,
+            sympatheticLoad,
+            hrvStatus:    hrvStressed  ? 'stressed_rigid'   : 'flexible_resilient',
+            texture:      hrvStressed  ? 'pink_noise + continuous_pad' : 'open_pad',
+            instruments:  respElevated ? 'cello_legato, sustained_synth' : 'piano, ambient_strings',
+            safeguard:    noiseThreat  ? 'transients blocked' : 'all_clear',
+        };
+    }
+
+    // ── Status helpers ────────────────────────────────────────────────────
+    function statusEl(cls, text, icon) {
+        return `<span class="w-1.5 h-1.5 rounded-full inline-block" style="background:currentColor;opacity:0.7"></span>${icon ? '<iconify-icon icon="' + icon + '" width="9" style="margin-right:1px"></iconify-icon>' : ''}${text}`;
+    }
+    function setStatus(id, cls, text) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.className = 'v-status ' + cls;
+        el.innerHTML = `<span class="w-1.5 h-1.5 rounded-full" style="background:currentColor;opacity:0.75;flex-shrink:0"></span>${text}`;
+    }
+
+    // ── Render HRV mini bar chart ─────────────────────────────────────────
+    function renderHrvBars(hrv) {
+        const container = document.getElementById('v-hrv-bars');
+        if (!container) return;
+        container.innerHTML = '';
+        // Simulate a short HRV history trending toward current value
+        const fakeHistory = [
+            hrv * 0.82, hrv * 0.91, hrv * 0.78, hrv * 0.95,
+            hrv * 0.88, hrv * 1.05, hrv * 0.93, hrv,
+        ];
+        const max = Math.max(...fakeHistory);
+        fakeHistory.forEach((v, i) => {
+            const bar = document.createElement('div');
+            bar.className = 'v-hrv-bar';
+            bar.style.height = ((v / max) * 100).toFixed(1) + '%';
+            bar.style.animationDelay = (i * 0.06) + 's';
+            bar.style.width = '4px';
+            container.appendChild(bar);
+        });
+    }
+
+    // ── Render stress ring ────────────────────────────────────────────────
+    function renderStressRing(score) {
+        const fill   = document.getElementById('v-stress-ring-fill');
+        const numEl  = document.getElementById('v-stress-num');
+        const lblEl  = document.getElementById('v-stress-label');
+        if (!fill) return;
+        const circumference = 2 * Math.PI * 22; // r=22
+        const offset = circumference * (1 - score / 10);
+        // Color by severity
+        const color = score >= 8 ? 'rgba(252,165,165,0.75)'
+                    : score >= 6 ? 'rgba(251,191,36,0.75)'
+                    :              'rgba(134,239,172,0.75)';
+        fill.style.stroke = color;
+        fill.style.strokeDashoffset = offset.toFixed(1);
+        if (numEl) numEl.textContent = score;
+        const labels = { 1:'Very Low', 2:'Low', 3:'Mild', 4:'Mild', 5:'Moderate',
+                         6:'Moderate', 7:'Elevated', 8:'High', 9:'Very High', 10:'Critical' };
+        if (lblEl) lblEl.textContent = labels[score] || '—';
+        setStatus('v-stress-status',
+            score >= 8 ? 'v-status-alert' : score >= 6 ? 'v-status-warn' : 'v-status-ok',
+            score >= 8 ? 'Critical' : score >= 6 ? 'Elevated' : 'Normal'
+        );
+    }
+
+    // ── Render motion bars ────────────────────────────────────────────────
+    function renderMotion(motion) {
+        const MAX_G = 1.0;
+        ['x','y','z'].forEach(axis => {
+            const bar = document.getElementById('v-motion-' + axis);
+            const val = document.getElementById('v-motion-' + axis + '-val');
+            const g   = motion[axis] ?? 0;
+            if (bar) bar.style.width = Math.min((g / MAX_G) * 100, 100) + '%';
+            if (val) val.textContent = g.toFixed(2) + 'g';
+        });
+        const total = Math.sqrt((motion.x||0)**2 + (motion.y||0)**2 + (motion.z||0)**2);
+        setStatus('v-motion-status',
+            total > 0.6 ? 'v-status-warn' : 'v-status-ok',
+            total > 0.6 ? 'Active / Restless' : total > 0.2 ? 'Low Jitter' : 'Still'
+        );
+    }
+
+    // ── Main render function ──────────────────────────────────────────────
+    function renderVitals(name, v) {
+        // Title & timestamp
+        document.getElementById('vitals-title').textContent = name + ' · Live Vitals';
+        document.getElementById('vitals-timestamp').textContent =
+            'Sampled · ' + new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+
+        // Show/hide grid
+        emptyEl.classList.add('hidden');
+        gridEl.classList.remove('hidden');
+
+        // Heart Rate
+        document.getElementById('v-hr-value').textContent = v.heartRate;
+        setStatus('v-hr-status',
+            v.heartRate > 100 ? 'v-status-alert' : v.heartRate > 85 ? 'v-status-warn' : 'v-status-ok',
+            v.heartRate > 100 ? 'Elevated' : v.heartRate > 85 ? 'Above Resting' : 'Normal'
+        );
+
+        // HRV
+        document.getElementById('v-hrv-value').textContent = v.hrv;
+        setStatus('v-hrv-status',
+            v.hrv < 30 ? 'v-status-alert' : v.hrv < 40 ? 'v-status-warn' : 'v-status-ok',
+            v.hrv < 30 ? 'Very Low — High Stress' : v.hrv < 40 ? 'Below Threshold' : 'Flexible'
+        );
+        renderHrvBars(v.hrv);
+
+        // Stress ring
+        renderStressRing(v.stressScore);
+
+        // Respiratory Rate
+        document.getElementById('v-rr-value').textContent = v.respiratoryRate;
+        setStatus('v-rr-status',
+            v.respiratoryRate > 20 ? 'v-status-alert' : v.respiratoryRate > 18 ? 'v-status-warn' : 'v-status-ok',
+            v.respiratoryRate > 20 ? 'Anxiety Pattern' : v.respiratoryRate > 18 ? 'Slightly Elevated' : 'Calm'
+        );
+        document.getElementById('v-rr-sub').textContent =
+            v.respiratoryRate > 18 ? 'Legato strings triggered' : 'Breathing normal';
+
+        // SpO2
+        document.getElementById('v-spo2-value').textContent = v.bloodOxygen?.toFixed(1) ?? '—';
+        setStatus('v-spo2-status',
+            (v.bloodOxygen ?? 99) < 94 ? 'v-status-alert' : (v.bloodOxygen ?? 99) < 96 ? 'v-status-warn' : 'v-status-ok',
+            (v.bloodOxygen ?? 99) < 94 ? 'Low — Attention' : 'Normal'
+        );
+
+        // Temp
+        document.getElementById('v-temp-value').textContent = v.wristTemperature?.toFixed(1) ?? '—';
+        setStatus('v-temp-status',
+            (v.wristTemperature ?? 36.5) > 37.5 ? 'v-status-warn' : 'v-status-ok',
+            (v.wristTemperature ?? 36.5) > 37.5 ? 'Slightly Warm' : 'Normal'
+        );
+
+        // Ambient Noise
+        document.getElementById('v-noise-value').textContent = v.ambientNoise;
+        setStatus('v-noise-status',
+            v.ambientNoise > 70 ? 'v-status-alert' : v.ambientNoise > 60 ? 'v-status-warn' : 'v-status-ok',
+            v.ambientNoise > 70 ? 'Loud — Safeguards On' : v.ambientNoise > 60 ? 'Moderate' : 'Quiet'
+        );
+        document.getElementById('v-noise-sub').textContent =
+            v.ambientNoise > 70 ? 'Transients & peaks blocked' : 'Environment safe';
+
+        // Body Motion
+        renderMotion(v.bodyMotion ?? { x:0, y:0, z:0 });
+
+        // Sleep Stage
+        const sleepLabels = { awake:'Awake', core:'Core Sleep', deep:'Deep Sleep', rem:'REM' };
+        document.getElementById('v-sleep-value').textContent = sleepLabels[v.sleepStage] ?? v.sleepStage ?? '—';
+        setStatus('v-sleep-status',
+            v.sleepStage === 'awake' ? 'v-status-warn' : 'v-status-ok',
+            v.sleepStage === 'awake' ? 'Not Sleeping' : 'Sleep Tracking Active'
+        );
+        document.getElementById('v-sleep-sub').textContent =
+            v.sleepStage !== 'awake' ? 'HealthKit sleep mode active' : '';
+
+        // Middleware analysis
+        const mw = computeMiddleware(v);
+        document.getElementById('v-target-bpm').textContent    = mw.targetBpm + ' BPM';
+        document.getElementById('v-sympathetic').textContent   = (mw.sympatheticLoad >= 0 ? '+' : '') + mw.sympatheticLoad + ' BPM';
+        document.getElementById('v-hrv-analysis').textContent  = mw.hrvStatus;
+        document.getElementById('v-texture').textContent       = mw.texture;
+        document.getElementById('v-instruments').textContent   = mw.instruments;
+        document.getElementById('v-safeguard').textContent     = mw.safeguard;
+
+        // Activate live dot on header button
+        liveDot.classList.remove('hidden');
+    }
+
+    // ── Expose globally so loadCase can call it ───────────────────────────
+    window.loadVitals = function (name, vitalsData) {
+        renderVitals(name, vitalsData);
+    };
+
+    // ── Init ──────────────────────────────────────────────────────────────
+    // modal starts hidden — opened via button or case load
 
 })();
 </script>

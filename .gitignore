@@ -1,2 +1,4 @@
 ui_mvp.md
 .env
+__pycache__/
+*.pyc

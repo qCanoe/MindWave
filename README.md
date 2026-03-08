@@ -1,4 +1,4 @@
-# MindWave
+# Soma
 
 > **Biometric-Driven Adaptive Music Therapy** — a 4-layer architecture that converts real-time Apple Watch health data into personalised AI-generated music for mental wellness.
 
@@ -80,20 +80,25 @@ MindWave/
 ## Features
 
 ### Therapy Interface (`web.html`)
+
 A fully self-contained single-page application — no build step, no dependencies to install.
 
-| Area | Details |
-|---|---|
-| **Mood Input** | Free-text entry interpreted into therapy mode |
-| **Mode Chips** | Deep Focus · Calm Down · Drift to Sleep · Anxiety Relief · Grounding · Energy Boost · Trauma Gentle |
-| **Vibe Chips** | Anxious · Overwhelmed · Creative Flow (multi-select, up to 3) |
+
+| Area                  | Details                                                                                                                                 |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| **Mood Input**        | Free-text entry interpreted into therapy mode                                                                                           |
+| **Mode Chips**        | Deep Focus · Calm Down · Drift to Sleep · Anxiety Relief · Grounding · Energy Boost · Trauma Gentle                                     |
+| **Vibe Chips**        | Anxious · Overwhelmed · Creative Flow (multi-select, up to 3)                                                                           |
 | **Brainwave Mapping** | Each mode maps to a clinical frequency: Gamma 40Hz / Theta 6Hz / Delta 2Hz / Alpha 10Hz / Schumann 7.83Hz / Beta 18Hz / Infra-Low 0.5Hz |
-| **Vinyl Player** | Gramophone-style visualiser with EQ bars, progress scrubbing, skip ±30s |
-| **Suno Generation** | One-click AI music generation via Suno V5 API with live status polling |
-| **Controls Drawer** | Intensity (1–4) · Duration (15/30/45 min) · Environment (None/Rain/Noise) |
+| **Vinyl Player**      | Gramophone-style visualiser with EQ bars, progress scrubbing, skip ±30s                                                                 |
+| **Suno Generation**   | One-click AI music generation via Suno V5 API with live status polling                                                                  |
+| **Controls Drawer**   | Intensity (1–4) · Duration (15/30/45 min) · Environment (None/Rain/Noise)                                                               |
+
 
 ### Profile Modal
+
 5-step therapy onboarding form:
+
 1. **Basic Information** — Name, age, gender, contact
 2. **Physical Health** — Hearing, chronic conditions, medication, sleep quality (slider)
 3. **Emotional Landscape** — Current state (up to 3), treatment goals, fluctuation pattern
@@ -103,31 +108,37 @@ A fully self-contained single-page application — no build step, no dependencie
 Profile data persists to `localStorage` and auto-restores on reload.
 
 ### Biometric Monitor (Vitals Modal)
+
 Displays a live Apple Watch biometric snapshot with derived clinical analysis:
 
-| Metric | Source | Notes |
-|---|---|---|
-| Heart Rate | HealthKit | ECG-style sparkline animation |
-| HRV · SDNN | HealthKit | 8-bar trend chart; threshold alert at < 40 ms |
-| Stress Score | Derived | Circular ring gauge, colour-graded (green/amber/red) |
-| Respiratory Rate | HealthKit | Instrument selection trigger at > 18 br/min |
-| Blood Oxygen SpO₂ | HealthKit | Alert below 94% |
-| Wrist Temperature | HealthKit | Warning above 37.5 °C |
-| Ambient Noise | HealthKit | Safeguard trigger above 70 dB |
-| Body Motion (XYZ) | Accelerometer | Three-axis bar visualisation |
-| Sleep Stage | HealthKit | Awake / Core / Deep / REM |
-| **Layer 2 Analysis** | Computed | Target BPM · Sympathetic Load · HRV Status · Acoustic Texture · Instrument Set · Noise Safeguard |
+
+| Metric               | Source        | Notes                                                                                            |
+| -------------------- | ------------- | ------------------------------------------------------------------------------------------------ |
+| Heart Rate           | HealthKit     | ECG-style sparkline animation                                                                    |
+| HRV · SDNN           | HealthKit     | 8-bar trend chart; threshold alert at < 40 ms                                                    |
+| Stress Score         | Derived       | Circular ring gauge, colour-graded (green/amber/red)                                             |
+| Respiratory Rate     | HealthKit     | Instrument selection trigger at > 18 br/min                                                      |
+| Blood Oxygen SpO₂    | HealthKit     | Alert below 94%                                                                                  |
+| Wrist Temperature    | HealthKit     | Warning above 37.5 °C                                                                            |
+| Ambient Noise        | HealthKit     | Safeguard trigger above 70 dB                                                                    |
+| Body Motion (XYZ)    | Accelerometer | Three-axis bar visualisation                                                                     |
+| Sleep Stage          | HealthKit     | Awake / Core / Deep / REM                                                                        |
+| **Layer 2 Analysis** | Computed      | Target BPM · Sympathetic Load · HRV Status · Acoustic Texture · Instrument Set · Noise Safeguard |
+
 
 ### Demo Cases
+
 Five pre-loaded clinical demonstration cases, each with a full profile, biometric snapshot, and a pre-generated Suno V5 track:
 
-| ID | Patient | Condition | Track |
-|---|---|---|---|
-| `case_001` | Xiao Wang, 28M | Work anxiety, post-work brain tension | *Midnight Window Seat* |
-| `case_002` | Lao Li, 62F | Insomnia, auditory sensitivity | *Moonlight Between Breaths* |
-| `case_003` | Xiao Chen, 21M | Attention deficit, study distraction | *Pure Function* |
-| `case_004` | Li Tongxue, 28M | PhD thesis anxiety, late-night lab | *Night Shift in Soft Gold* |
-| `case_005` | Prof. Zhang, 45M | Dual research/teaching pressure, existential anxiety | *Autumn Tenure* |
+
+| ID         | Patient          | Condition                                            | Track                       |
+| ---------- | ---------------- | ---------------------------------------------------- | --------------------------- |
+| `case_001` | Xiao Wang, 28M   | Work anxiety, post-work brain tension                | *Midnight Window Seat*      |
+| `case_002` | Lao Li, 62F      | Insomnia, auditory sensitivity                       | *Moonlight Between Breaths* |
+| `case_003` | Xiao Chen, 21M   | Attention deficit, study distraction                 | *Pure Function*             |
+| `case_004` | Li Tongxue, 28M  | PhD thesis anxiety, late-night lab                   | *Night Shift in Soft Gold*  |
+| `case_005` | Prof. Zhang, 45M | Dual research/teaching pressure, existential anxiety | *Autumn Tenure*             |
+
 
 Clicking a case instantly loads: profile data into the modal, mood input and mode/vibe chips, biometric data into the Vitals monitor, and begins playing the cached MP3.
 
@@ -189,21 +200,23 @@ python music_ai_module/example.py --verify   # optional LLM verification (~$0.00
 
 All parameters are centralised in `SystemConfig` and can be overridden via environment variables:
 
-| Parameter | Default | Description |
-|---|---|---|
-| `OPENAI_API_KEY` | — | LLM API key (optional verification only) |
-| `LLM_BASE_URL` | `https://api.zyai.online/v1` | OpenAI-compatible endpoint |
-| `LLM_MODEL` | `gpt-3.5-turbo` | Model for prompt verification |
-| `SUNO_API_KEY` | — | Suno music generation key |
-| `min_bpm` | 45 | Hard floor for entrainment BPM |
-| `max_bpm` | 140 | Hard ceiling for entrainment BPM |
-| `rhythm_reduction_pct` | 15.0 | Entrainment reduction (%) |
-| `hrv_safety_threshold` | 40.0 ms | HRV below which masking activates |
-| `max_noise_db` | 70.0 dB | Noise above which safeguards fire |
-| `sample_interval_s` | 30 s | Biometric sampling interval |
-| `feedback_loop_s` | 180 s | Duration of one intervention cycle |
-| `cycles_per_session` | 3 | Cycles per full therapy session |
-| `hr_smoothing_window` | 5 | Moving-average window for HR filter |
+
+| Parameter              | Default                      | Description                              |
+| ---------------------- | ---------------------------- | ---------------------------------------- |
+| `OPENAI_API_KEY`       | —                            | LLM API key (optional verification only) |
+| `LLM_BASE_URL`         | `https://api.zyai.online/v1` | OpenAI-compatible endpoint               |
+| `LLM_MODEL`            | `gpt-3.5-turbo`              | Model for prompt verification            |
+| `SUNO_API_KEY`         | —                            | Suno music generation key                |
+| `min_bpm`              | 45                           | Hard floor for entrainment BPM           |
+| `max_bpm`              | 140                          | Hard ceiling for entrainment BPM         |
+| `rhythm_reduction_pct` | 15.0                         | Entrainment reduction (%)                |
+| `hrv_safety_threshold` | 40.0 ms                      | HRV below which masking activates        |
+| `max_noise_db`         | 70.0 dB                      | Noise above which safeguards fire        |
+| `sample_interval_s`    | 30 s                         | Biometric sampling interval              |
+| `feedback_loop_s`      | 180 s                        | Duration of one intervention cycle       |
+| `cycles_per_session`   | 3                            | Cycles per full therapy session          |
+| `hr_smoothing_window`  | 5                            | Moving-average window for HR filter      |
+
 
 ### Layer 2 Mapping Logic
 
@@ -264,13 +277,15 @@ Your API key is stored only in `localStorage` and is never forwarded to any serv
 
 ## Neuroscience Basis
 
-| Principle | Implementation |
-|---|---|
-| **Rhythmic Entrainment** | Music BPM set 15% below heart rate; repeated auditory stimuli entrain cardiovascular rhythms via baroreflex modulation |
-| **HRV & Vagal Tone** | SDNN < 40 ms indicates sympathetic dominance; acoustic masking (pink noise) reduces perceived threat and supports parasympathetic re-engagement |
-| **Respiratory Synchronisation** | Sustained legato instruments at slow tempos naturally extend exhalation cycles, activating the parasympathetic nervous system |
-| **Brainwave Entrainment** | Binaural beat frequencies embedded at clinically relevant bands: Delta (2 Hz, sleep), Theta (6 Hz, relaxation), Alpha (10 Hz, anxiety relief), Gamma (40 Hz, focus) |
-| **Environmental Acoustic Safety** | Above 70 dB ambient, sharp transients risk startle responses; constraints are applied automatically |
+
+| Principle                         | Implementation                                                                                                                                                      |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Rhythmic Entrainment**          | Music BPM set 15% below heart rate; repeated auditory stimuli entrain cardiovascular rhythms via baroreflex modulation                                              |
+| **HRV & Vagal Tone**              | SDNN < 40 ms indicates sympathetic dominance; acoustic masking (pink noise) reduces perceived threat and supports parasympathetic re-engagement                     |
+| **Respiratory Synchronisation**   | Sustained legato instruments at slow tempos naturally extend exhalation cycles, activating the parasympathetic nervous system                                       |
+| **Brainwave Entrainment**         | Binaural beat frequencies embedded at clinically relevant bands: Delta (2 Hz, sleep), Theta (6 Hz, relaxation), Alpha (10 Hz, anxiety relief), Gamma (40 Hz, focus) |
+| **Environmental Acoustic Safety** | Above 70 dB ambient, sharp transients risk startle responses; constraints are applied automatically                                                                 |
+
 
 ---
 
